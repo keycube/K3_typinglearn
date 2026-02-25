@@ -332,7 +332,6 @@ function initCube() {
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) })
     ];
