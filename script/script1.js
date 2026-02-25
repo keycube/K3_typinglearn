@@ -292,17 +292,17 @@ function initCube() {
     // touches
 
     const faceFront = [
-        ["alt","OS","ctrl","shift"],
-        [",<",".>","/?",""],
-        [":;","'","Tab","`~"],
-        ["{[","]}","|",""]
-    ];
-
-    const faceBack = [
         ["","V","F","R"],
         ["","C","D","E"],
         ["","X","S","W"],
         ["","Z","A","Q"]
+    ];
+
+    const faceBack = [
+        ["alt","OS","ctrl","shift"],
+        [",<",".>","/?",""],
+        [":;","'","Tab","`~"],
+        ["{[","]}","|",""]
     ];
 
     const faceRight = [
@@ -320,10 +320,10 @@ function initCube() {
     ];
 
     const faceTop = [
-        ["CpLk","Y","H","Bks"],
-        ["T","Up","Right","Bks"],
-        ["G","Left","Dwn","Entr"],
-        ["Sp","Sp","Sp","Entr"]
+        ["Sp","G","T","CpLk"],
+        ["Sp","Left","Up","Y"],
+        ["Sp","Dwn","Right","H"],
+        ["Entr","Entr","Bks","Bks"]
     ];
 
    
