@@ -193,67 +193,190 @@ function finishExercise() {
 
 // Cube
 
-
 function initCube() {
 
     const container = document.getElementById("cube-container");
 
+    // scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#0d0c18");
 
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshStandardMaterial({
-        color: 0x00ffff,
-        metalness: 0.7,
-        roughness: 0.2
+    // camera
+    const camera = new THREE.PerspectiveCamera(
+        60,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        1000
+    );
+    camera.position.z = 7;
+
+    const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true
     });
 
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    container.appendChild(renderer.domElement);
 
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 5, 5);
     scene.add(light);
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambient);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
-    const camera = new THREE.PerspectiveCamera(
-        75,
-        container.clientWidth / container.clientHeight,
-        0.1,
-        1000
-    );
 
-    camera.position.z = 5;
+    // faces du clavier
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
+    function createKeyboardFace(layout) {
 
-    function animate() {
-        requestAnimationFrame(animate);
+        const canvas = document.createElement("canvas");
+        canvas.width = 512;
+        canvas.height = 512;
 
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
+        const ctx = canvas.getContext("2d");
 
-        renderer.render(scene, camera);
+        // fond
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, 512, 512);
+
+        const rows = layout.length;
+        const cols = layout[0].length;
+
+        const padding = 40;
+        const gap = 15;
+
+        const keyWidth =
+            (512 - padding * 2 - gap * (cols - 1)) / cols;
+
+        const keyHeight =
+            (512 - padding * 2 - gap * (rows - 1)) / rows;
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+
+                const letter = layout[r][c];
+
+                const x =
+                    padding + c * (keyWidth + gap);
+                const y =
+                    padding + r * (keyHeight + gap);
+
+                // touche
+                ctx.fillStyle = "#e0e0e0";
+                ctx.fillRect(x, y, keyWidth, keyHeight);
+
+                ctx.strokeStyle = "#999";
+                ctx.lineWidth = 4;
+                ctx.strokeRect(x, y, keyWidth, keyHeight);
+
+                // texte
+                ctx.fillStyle = "#000";
+                ctx.font = "bold 32px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                ctx.fillText(
+                    letter,
+                    x + keyWidth / 2,
+                    y + keyHeight / 2
+                );
+            }
+        }
+
+        return new THREE.CanvasTexture(canvas);
     }
 
-    animate();
+    
+    // touches
 
+    const faceFront = [
+        ["A","Z","E","R"],
+        ["Q","S","D","F"],
+        ["W","X","C","V"],
+        ["1","2","3","4"]
+    ];
+
+    const faceBack = [
+        ["U","I","O","P"],
+        ["J","K","L","M"],
+        ["7","8","9","0"],
+        ["?","!",";","."]
+    ];
+
+    const faceRight = [
+        ["F","J","G","H"],
+        ["T","Y","S","L"],
+        ["B","N",",","'"],
+        ["+","-","*","/"]
+    ];
+
+    const faceLeft = [
+        ["←","↑","↓","→"],
+        ["Ctrl","Alt","Fn","Tab"],
+        ["Esc","Shift","Caps","⏎"],
+        ["[","]","{","}"]
+    ];
+
+    const faceTop = [
+        ["&","é","\"","'"],
+        ["(","-","è","_"],
+        ["ç","à",")","="],
+        ["~","#","@","$"]
+    ];
+
+    const faceBottom = [
+        ["<",">","|","\\"],
+        ["%","^","°","µ"],
+        ["§","¤","£","€"],
+        ["✓","✕","★","•"]
+    ];
+
+
+    const materials = [
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) })
+    ];
+
+    
+    // cube
+
+    const geometry = new THREE.BoxGeometry(4, 4, 4);
+    const cube = new THREE.Mesh(geometry, materials);
+
+    cube.rotation.x = 0.5;
+    cube.rotation.y = 0.8;
+
+    scene.add(cube);
+
+    renderer.render(scene, camera);
+
+    // responsive
     window.addEventListener("resize", () => {
+
         camera.aspect =
-            container.clientWidth / container.clientHeight;
+            container.clientWidth /
+            container.clientHeight;
+
         camera.updateProjectionMatrix();
+
         renderer.setSize(
             container.clientWidth,
             container.clientHeight
         );
+
+        renderer.render(scene, camera);
     });
 }
 
 initCube();
+
+
 
 
 
