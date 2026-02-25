@@ -19,5 +19,5 @@ document.getElementById("startBtn").addEventListener("click", function() {
     }
 
     localStorage.setItem("username", username);
-    window.location.href = "part1.html";
+    window.location.href = "code/part1.html";
 });

@@ -185,7 +185,7 @@ function finishExercise() {
 
         // Fin partie lettres, rediriger vers la partie Mots
         setTimeout(() => {
-            window.location.href = "part2.html";
+            window.location.href = "code/part2.html";
         }, 1000);
     }
 }
@@ -263,7 +263,7 @@ initCube();
 function endSession() {
 
     clearInterval(timerInterval);
-    window.location.href = "resultat.html";
+    window.location.href = "code/resultat.html";
 }
 
 

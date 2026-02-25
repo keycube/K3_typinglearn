@@ -178,7 +178,7 @@ function finishExercise() {
     if (currentExerciseIndex < exercises.length) {
         setTimeout(loadWord, 800);
     } else {
-        window.location.href = "part3.html";
+        window.location.href = "code/part3.html";
     }
 }
 
@@ -186,7 +186,7 @@ function finishExercise() {
 
 function endSession() {
     clearInterval(timerInterval);
-    window.location.href = "resultat.html";
+    window.location.href = "code/resultat.html";
 }
 
 // Initialisation
