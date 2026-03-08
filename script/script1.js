@@ -356,6 +356,7 @@ function initCube() {
     ];
 
 
+
     const materials = [
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
