@@ -313,14 +313,14 @@ function initCube() {
 
     // touches
 
-    const faceFront = [
+    const faceBack = [
         ["","V","F","R"],
         ["","C","D","E"],
         ["","X","S","W"],
         ["","Z","A","Q"]
     ];
 
-    const faceBack = [
+    const faceFront = [
         ["alt","OS","ctrl","shift"],
         [",<",".>","/?",""],
         [":;","'","Tab","`~"],
