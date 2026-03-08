@@ -258,18 +258,33 @@ function initCube() {
 
                 const letter = layout[r][c];
 
-                const x =
-                    padding + c * (keyWidth + gap);
-                const y =
-                    padding + r * (keyHeight + gap);
+                const x = padding + c * (keyWidth + gap);
+                const y = padding + r * (keyHeight + gap);
 
-                // touche
+                // ombre derrière la touche
+                ctx.fillStyle = "rgba(0,0,0,0.25)";
+                ctx.fillRect(x + 6, y + 6, keyWidth, keyHeight);
+
+                // touche principale
                 ctx.fillStyle = "#e0e0e0";
                 ctx.fillRect(x, y, keyWidth, keyHeight);
 
-                ctx.strokeStyle = "#999";
-                ctx.lineWidth = 4;
-                ctx.strokeRect(x, y, keyWidth, keyHeight);
+                // lumière haut gauche
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(x, y + keyHeight);
+                ctx.lineTo(x, y);
+                ctx.lineTo(x + keyWidth, y);
+                ctx.stroke();
+
+                // ombre bas droite
+                ctx.strokeStyle = "#777";
+                ctx.beginPath();
+                ctx.moveTo(x + keyWidth, y);
+                ctx.lineTo(x + keyWidth, y + keyHeight);
+                ctx.lineTo(x, y + keyHeight);
+                ctx.stroke();
 
                 // texte
                 ctx.fillStyle = "#000";
@@ -277,18 +292,25 @@ function initCube() {
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
+                ctx.shadowColor = "rgba(0,0,0,0.3)";
+                ctx.shadowBlur = 4;
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
+
                 ctx.fillText(
                     letter,
                     x + keyWidth / 2,
                     y + keyHeight / 2
                 );
+
+                ctx.shadowBlur = 0;
             }
         }
 
         return new THREE.CanvasTexture(canvas);
     }
 
-    
+
     // touches
 
     const faceFront = [
@@ -306,7 +328,7 @@ function initCube() {
     ];
 
     const faceRight = [
-       ["U","J","B",""],
+        ["U","J","B",""],
         ["I","K","N",""],
         ["O","L","M",""],
         ["P","","",""]
@@ -326,17 +348,24 @@ function initCube() {
         ["Entr","Entr","Bks","Bks"]
     ];
 
-   
+    const faceBottom = [
+        ["","","",""],
+        ["","","",""],
+        ["","","",""],
+        ["","","",""]
+    ];
+
 
     const materials = [
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) })
     ];
 
-    
+
     // cube
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
@@ -349,7 +378,9 @@ function initCube() {
 
     renderer.render(scene, camera);
 
+
     // responsive
+
     window.addEventListener("resize", () => {
 
         camera.aspect =
@@ -368,6 +399,7 @@ function initCube() {
 }
 
 initCube();
+
 
 
 
