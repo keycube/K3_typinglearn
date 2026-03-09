@@ -353,43 +353,43 @@ function initCube() {
     scene.add(cube);
 
 
-    // -------------------------
-    // DUPLICATION DES FACES CACHÉES
-    // -------------------------
+   // -------------------------
+// DUPLICATION DES FACES CACHÉES
+// -------------------------
 
-    const planeGeometry = new THREE.PlaneGeometry(4, 4);
+const planeGeometry = new THREE.PlaneGeometry(4, 4);
+
+// faceRight (décalée vers la droite)
+
+const rightFace = new THREE.Mesh(
+    planeGeometry,
+    new THREE.MeshStandardMaterial({
+        map: createKeyboardFace(faceRight),
+        side: THREE.DoubleSide
+    })
+);
+
+rightFace.position.set(5.2, 0, 0); 
+rightFace.rotation.y = -Math.PI / 2;
+
+scene.add(rightFace);
 
 
-    // faceBack surélevée
+// faceBack (derrière mais remontée)
 
-    const backFace = new THREE.Mesh(
-        planeGeometry,
-        new THREE.MeshStandardMaterial({
-            map: createKeyboardFace(faceBack),
-            side: THREE.DoubleSide
-        })
-    );
+const backFace = new THREE.Mesh(
+    planeGeometry,
+    new THREE.MeshStandardMaterial({
+        map: createKeyboardFace(faceBack),
+        side: THREE.DoubleSide
+    })
+);
 
-    backFace.position.set(0, 3.3, -1.5);
-    backFace.rotation.x = -Math.PI / 4;
+backFace.position.set(0, 2.5, -5.2);
+backFace.rotation.y = Math.PI;
 
-    scene.add(backFace);
+scene.add(backFace);
 
-
-    // faceRight surélevée
-
-    const rightFace = new THREE.Mesh(
-        planeGeometry,
-        new THREE.MeshStandardMaterial({
-            map: createKeyboardFace(faceRight),
-            side: THREE.DoubleSide
-        })
-    );
-
-    rightFace.position.set(3.3, 1.5, 0);
-    rightFace.rotation.y = -Math.PI / 4;
-
-    scene.add(rightFace);
 
 
     renderer.render(scene, camera);
