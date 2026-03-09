@@ -344,7 +344,7 @@ function initCube() {
         })
     );
 
-    rightFace.position.set(4.5,1,0);
+    rightFace.position.set(6,2,0);
     rightFace.rotation.y = -Math.PI/2;
     cube.add(rightFace);
 
@@ -357,7 +357,7 @@ function initCube() {
         })
     );
 
-    backFace.position.set(0,1.2,-4.5);
+    backFace.position.set(0,2,-6);
     backFace.rotation.y = Math.PI;
     cube.add(backFace);
 
