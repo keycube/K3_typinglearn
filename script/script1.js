@@ -227,7 +227,7 @@ function initCube() {
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
 
-    // faces du clavier
+    // création texture clavier
 
     function createKeyboardFace(layout) {
 
@@ -237,7 +237,6 @@ function initCube() {
 
         const ctx = canvas.getContext("2d");
 
-        // fond
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, 512, 512);
 
@@ -258,52 +257,28 @@ function initCube() {
 
                 const letter = layout[r][c];
 
-                const x = padding + c * (keyWidth + gap);
-                const y = padding + r * (keyHeight + gap);
+                const x =
+                    padding + c * (keyWidth + gap);
+                const y =
+                    padding + r * (keyHeight + gap);
 
-                // ombre derrière la touche
-                ctx.fillStyle = "rgba(0,0,0,0.25)";
-                ctx.fillRect(x + 6, y + 6, keyWidth, keyHeight);
-
-                // touche principale
                 ctx.fillStyle = "#e0e0e0";
                 ctx.fillRect(x, y, keyWidth, keyHeight);
 
-                // lumière haut gauche
-                ctx.strokeStyle = "#ffffff";
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(x, y + keyHeight);
-                ctx.lineTo(x, y);
-                ctx.lineTo(x + keyWidth, y);
-                ctx.stroke();
+                ctx.strokeStyle = "#999";
+                ctx.lineWidth = 4;
+                ctx.strokeRect(x, y, keyWidth, keyHeight);
 
-                // ombre bas droite
-                ctx.strokeStyle = "#777";
-                ctx.beginPath();
-                ctx.moveTo(x + keyWidth, y);
-                ctx.lineTo(x + keyWidth, y + keyHeight);
-                ctx.lineTo(x, y + keyHeight);
-                ctx.stroke();
-
-                // texte
                 ctx.fillStyle = "#000";
                 ctx.font = "bold 32px Arial";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-
-                ctx.shadowColor = "rgba(0,0,0,0.3)";
-                ctx.shadowBlur = 4;
-                ctx.shadowOffsetX = 1;
-                ctx.shadowOffsetY = 1;
 
                 ctx.fillText(
                     letter,
                     x + keyWidth / 2,
                     y + keyHeight / 2
                 );
-
-                ctx.shadowBlur = 0;
             }
         }
 
@@ -313,6 +288,13 @@ function initCube() {
 
     // touches
 
+     const faceFront = [
+        ["alt","OS","ctrl","shift"],
+        [",<",".>","/?",""],
+        [":;","'","Tab","`~"],
+        ["{[","]}","|",""]
+    ];
+
     const faceBack = [
         ["","V","F","R"],
         ["","C","D","E"],
@@ -320,12 +302,6 @@ function initCube() {
         ["","Z","A","Q"]
     ];
 
-    const faceFront = [
-        ["alt","OS","ctrl","shift"],
-        [",<",".>","/?",""],
-        [":;","'","Tab","`~"],
-        ["{[","]}","|",""]
-    ];
 
     const faceRight = [
         ["U","J","B",""],
@@ -356,7 +332,6 @@ function initCube() {
     ];
 
 
-
     const materials = [
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
@@ -367,7 +342,7 @@ function initCube() {
     ];
 
 
-    // cube
+    // cube principal
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
     const cube = new THREE.Mesh(geometry, materials);
@@ -376,6 +351,46 @@ function initCube() {
     cube.rotation.y = 0.8;
 
     scene.add(cube);
+
+
+    // -------------------------
+    // DUPLICATION DES FACES CACHÉES
+    // -------------------------
+
+    const planeGeometry = new THREE.PlaneGeometry(4, 4);
+
+
+    // faceBack surélevée
+
+    const backFace = new THREE.Mesh(
+        planeGeometry,
+        new THREE.MeshStandardMaterial({
+            map: createKeyboardFace(faceBack),
+            side: THREE.DoubleSide
+        })
+    );
+
+    backFace.position.set(0, 3.3, -1.5);
+    backFace.rotation.x = -Math.PI / 4;
+
+    scene.add(backFace);
+
+
+    // faceRight surélevée
+
+    const rightFace = new THREE.Mesh(
+        planeGeometry,
+        new THREE.MeshStandardMaterial({
+            map: createKeyboardFace(faceRight),
+            side: THREE.DoubleSide
+        })
+    );
+
+    rightFace.position.set(3.3, 1.5, 0);
+    rightFace.rotation.y = -Math.PI / 4;
+
+    scene.add(rightFace);
+
 
     renderer.render(scene, camera);
 
@@ -400,6 +415,7 @@ function initCube() {
 }
 
 initCube();
+
 
 
 
