@@ -1,17 +1,13 @@
-
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-
 
 
 // Configuration de la session
 
-
-const TOTAL_EXERCISES_SESSION = 11; // 4 exercices lettres + 4 exercices mots + 3 exercices phrases
-const SESSION_DURATION = 2100; // 35 minutes en secondes
+const TOTAL_EXERCISES_SESSION = 11;
+const SESSION_DURATION = 2100;
 
 
 // Données exercices Partie Lettres
-
 
 const exercises = [
     { name: "FJ", text: "jjjj ffff jjff jj ffjj ff j f ffjf fj fffjj ffjjjjf ffjjff jffjfjfj ffjjfj fjjf ffjjffj" },
@@ -27,13 +23,11 @@ let spans = [];
 
 // Nom d'utilisateur
 
-
 const username = localStorage.getItem("username");
 document.getElementById("usernameDisplay").textContent = username || "Invité";
 
 
-// Chronomètre de la session
-
+// Chronomètre
 
 let seconds = parseInt(localStorage.getItem("globalTime")) || 0;
 
@@ -51,6 +45,7 @@ const timerInterval = setInterval(() => {
 
 }, 1000);
 
+
 function updateTimerDisplay() {
 
     const min = Math.floor(seconds / 60);
@@ -62,8 +57,7 @@ function updateTimerDisplay() {
 }
 
 
-// Barre de progression de la session
-
+// Barre progression
 
 function updateGlobalProgress() {
 
@@ -79,7 +73,6 @@ function updateGlobalProgress() {
 
 
 // Curseur
-
 
 function updateCursor() {
 
@@ -97,8 +90,7 @@ function updateCursor() {
 }
 
 
-// Chargement des exercies
-
+// Chargement exercice
 
 function loadExercise(index) {
 
@@ -124,8 +116,7 @@ function loadExercise(index) {
 }
 
 
-// Gestion de la frappe
-
+// Gestion frappe
 
 document.addEventListener("keydown", (e) => {
 
@@ -155,8 +146,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 
-// Fin de l'exercice
-
+// Fin exercice
 
 function finishExercise() {
 
@@ -164,7 +154,6 @@ function finishExercise() {
     const exElement = document.getElementById(exId);
     if (exElement) exElement.classList.add("done");
 
-    // Incrémenter progression globale
     let completed =
         parseInt(localStorage.getItem("completedExercises")) || 0;
 
@@ -183,7 +172,6 @@ function finishExercise() {
 
     } else {
 
-        // Fin partie lettres, rediriger vers la partie Mots
         setTimeout(() => {
             window.location.href = "code/part2.html";
         }, 1000);
@@ -191,16 +179,14 @@ function finishExercise() {
 }
 
 
-// Cube
+// CUBE
 
 function initCube() {
 
     const container = document.getElementById("cube-container");
 
-    // scene
     const scene = new THREE.Scene();
 
-    // camera
     const camera = new THREE.PerspectiveCamera(
         60,
         container.clientWidth / container.clientHeight,
@@ -226,8 +212,6 @@ function initCube() {
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
-
-    // création texture clavier
 
     function createKeyboardFace(layout) {
 
@@ -286,9 +270,7 @@ function initCube() {
     }
 
 
-    // touches
-
-     const faceFront = [
+    const faceFront = [
         ["alt","OS","ctrl","shift"],
         [",<",".>","/?",""],
         [":;","'","Tab","`~"],
@@ -301,7 +283,6 @@ function initCube() {
         ["","X","S","W"],
         ["","Z","A","Q"]
     ];
-
 
     const faceRight = [
         ["U","J","B",""],
@@ -342,9 +323,7 @@ function initCube() {
     ];
 
 
-    // cube principal
-
-    const geometry = new THREE.BoxGeometry(4, 4, 4);
+    const geometry = new THREE.BoxGeometry(4,4,4);
     const cube = new THREE.Mesh(geometry, materials);
 
     cube.rotation.x = 0.5;
@@ -353,77 +332,43 @@ function initCube() {
     scene.add(cube);
 
 
-   // -------------------------
-// DUPLICATION DES FACES CACHÉES
-// -------------------------
+    // FACES SURÉLEVÉES (CORRECTION)
 
-const planeGeometry = new THREE.PlaneGeometry(4, 4);
+    const planeGeometry = new THREE.PlaneGeometry(4,4);
 
-// faceRight (décalée vers la droite)
+    const rightFace = new THREE.Mesh(
+        planeGeometry,
+        new THREE.MeshStandardMaterial({
+            map: createKeyboardFace(faceRight),
+            side: THREE.DoubleSide
+        })
+    );
 
-const rightFace = new THREE.Mesh(
-    planeGeometry,
-    new THREE.MeshStandardMaterial({
-        map: createKeyboardFace(faceRight),
-        side: THREE.DoubleSide
-    })
-);
-
-rightFace.position.set(5.2, 0, 0); 
-rightFace.rotation.y = -Math.PI / 2;
-
-scene.add(rightFace);
+    rightFace.position.set(3.2,0,0);
+    rightFace.rotation.y = -Math.PI/2;
+    cube.add(rightFace);
 
 
-// faceBack (derrière mais remontée)
+    const backFace = new THREE.Mesh(
+        planeGeometry,
+        new THREE.MeshStandardMaterial({
+            map: createKeyboardFace(faceBack),
+            side: THREE.DoubleSide
+        })
+    );
 
-const backFace = new THREE.Mesh(
-    planeGeometry,
-    new THREE.MeshStandardMaterial({
-        map: createKeyboardFace(faceBack),
-        side: THREE.DoubleSide
-    })
-);
-
-backFace.position.set(0, 2.5, -5.2);
-backFace.rotation.y = Math.PI;
-
-scene.add(backFace);
-
+    backFace.position.set(0,0,-3.2);
+    backFace.rotation.y = Math.PI;
+    cube.add(backFace);
 
 
     renderer.render(scene, camera);
-
-
-    // responsive
-
-    window.addEventListener("resize", () => {
-
-        camera.aspect =
-            container.clientWidth /
-            container.clientHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-            container.clientWidth,
-            container.clientHeight
-        );
-
-        renderer.render(scene, camera);
-    });
 }
 
 initCube();
 
 
-
-
-
-
-
-// Fin de la session
-
+// Fin session
 
 function endSession() {
 
@@ -433,7 +378,6 @@ function endSession() {
 
 
 // Initialisation
-
 
 updateGlobalProgress();
 loadExercise(currentExerciseIndex);
