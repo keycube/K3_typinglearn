@@ -348,7 +348,7 @@ function initCube() {
         })
     );
 
-    backFace.position.set(-3.5,1.2,-5);
+    backFace.position.set(-6,1.2,0);
     backFace.rotation.y=Math.PI/2;
     scene.add(backFace);
 
