@@ -21,7 +21,7 @@ let currentIndex = 0;
 let spans = [];
 
 
-// Nom d'utilisateur
+// Nom utilisateur
 
 const username = localStorage.getItem("username");
 document.getElementById("usernameDisplay").textContent = username || "Invité";
@@ -57,7 +57,7 @@ function updateTimerDisplay() {
 }
 
 
-// Barre progression
+// Progression session
 
 function updateGlobalProgress() {
 
@@ -179,7 +179,10 @@ function finishExercise() {
 }
 
 
-// CUBE
+
+// ============================
+// CUBE THREE.JS
+// ============================
 
 function initCube() {
 
@@ -202,18 +205,16 @@ function initCube() {
 
     renderer.setClearColor(0x000000, 0);
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-
     container.appendChild(renderer.domElement);
 
     const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5);
+    light.position.set(5,5,5);
     scene.add(light);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    scene.add(new THREE.AmbientLight(0xffffff,0.6));
 
 
-    function createKeyboardFace(layout) {
+    function createKeyboardFace(layout){
 
         const canvas = document.createElement("canvas");
         canvas.width = 512;
@@ -221,8 +222,8 @@ function initCube() {
 
         const ctx = canvas.getContext("2d");
 
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, 512, 512);
+        ctx.fillStyle="#ffffff";
+        ctx.fillRect(0,0,512,512);
 
         const rows = layout.length;
         const cols = layout[0].length;
@@ -230,39 +231,30 @@ function initCube() {
         const padding = 40;
         const gap = 15;
 
-        const keyWidth =
-            (512 - padding * 2 - gap * (cols - 1)) / cols;
+        const keyWidth = (512-padding*2-gap*(cols-1))/cols;
+        const keyHeight = (512-padding*2-gap*(rows-1))/rows;
 
-        const keyHeight =
-            (512 - padding * 2 - gap * (rows - 1)) / rows;
-
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
+        for(let r=0;r<rows;r++){
+            for(let c=0;c<cols;c++){
 
                 const letter = layout[r][c];
 
-                const x =
-                    padding + c * (keyWidth + gap);
-                const y =
-                    padding + r * (keyHeight + gap);
+                const x = padding + c*(keyWidth+gap);
+                const y = padding + r*(keyHeight+gap);
 
-                ctx.fillStyle = "#e0e0e0";
-                ctx.fillRect(x, y, keyWidth, keyHeight);
+                ctx.fillStyle="#e0e0e0";
+                ctx.fillRect(x,y,keyWidth,keyHeight);
 
-                ctx.strokeStyle = "#999";
-                ctx.lineWidth = 4;
-                ctx.strokeRect(x, y, keyWidth, keyHeight);
+                ctx.strokeStyle="#999";
+                ctx.lineWidth=4;
+                ctx.strokeRect(x,y,keyWidth,keyHeight);
 
-                ctx.fillStyle = "#000";
-                ctx.font = "bold 32px Arial";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
+                ctx.fillStyle="#000";
+                ctx.font="bold 32px Arial";
+                ctx.textAlign="center";
+                ctx.textBaseline="middle";
 
-                ctx.fillText(
-                    letter,
-                    x + keyWidth / 2,
-                    y + keyHeight / 2
-                );
+                ctx.fillText(letter,x+keyWidth/2,y+keyHeight/2);
             }
         }
 
@@ -270,42 +262,42 @@ function initCube() {
     }
 
 
-    const faceFront = [
+    const faceFront=[
         ["alt","OS","ctrl","shift"],
         [",<",".>","/?",""],
         [":;","'","Tab","`~"],
         ["{[","]}","|",""]
     ];
 
-    const faceBack = [
+    const faceBack=[
         ["","V","F","R"],
         ["","C","D","E"],
         ["","X","S","W"],
         ["","Z","A","Q"]
     ];
 
-    const faceRight = [
+    const faceRight=[
         ["U","J","B",""],
         ["I","K","N",""],
         ["O","L","M",""],
         ["P","","",""]
     ];
 
-    const faceLeft = [
+    const faceLeft=[
         ["shift","ctrl","OS","alt"],
         ["7&","8*","9(","0)"],
         ["4$","5%","6^","-_"],
         ["1!","2@","3#","+="]
     ];
 
-    const faceTop = [
+    const faceTop=[
         ["Sp","G","T","CpLk"],
         ["Sp","Left","Up","Y"],
         ["Sp","Dwn","Right","H"],
         ["Entr","Entr","Bks","Bks"]
     ];
 
-    const faceBottom = [
+    const faceBottom=[
         ["","","",""],
         ["","","",""],
         ["","","",""],
@@ -313,56 +305,70 @@ function initCube() {
     ];
 
 
-    const materials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) })
+    const materials=[
+        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceRight)}),
+        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceLeft)}),
+        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceTop)}),
+        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceBottom)}),
+        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceFront)}),
+        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceBack)})
     ];
 
 
-    const geometry = new THREE.BoxGeometry(4,4,4);
-    const cube = new THREE.Mesh(geometry, materials);
+    const geometry=new THREE.BoxGeometry(4,4,4);
+    const cube=new THREE.Mesh(geometry,materials);
 
-    cube.rotation.x = 0.5;
-    cube.rotation.y = 0.8;
+    cube.rotation.x=0.5;
+    cube.rotation.y=0.8;
 
     scene.add(cube);
 
 
-    // FACES SURÉLEVÉES (CORRECTION)
+    // Faces dupliquées
 
-    const planeGeometry = new THREE.PlaneGeometry(4,4);
+    const planeGeometry=new THREE.PlaneGeometry(4,4);
 
-    const rightFace = new THREE.Mesh(
+    const rightFace=new THREE.Mesh(
         planeGeometry,
         new THREE.MeshStandardMaterial({
-            map: createKeyboardFace(faceRight),
-            side: THREE.DoubleSide
+            map:createKeyboardFace(faceRight),
+            side:THREE.DoubleSide
         })
     );
 
     rightFace.position.set(6,2,0);
-    rightFace.rotation.y = -Math.PI/2;
-    cube.add(rightFace);
+    rightFace.rotation.y=-Math.PI/2;
+    scene.add(rightFace);
 
 
-    const backFace = new THREE.Mesh(
+    const backFace=new THREE.Mesh(
         planeGeometry,
         new THREE.MeshStandardMaterial({
-            map: createKeyboardFace(faceBack),
-            side: THREE.DoubleSide
+            map:createKeyboardFace(faceBack),
+            side:THREE.DoubleSide
         })
     );
 
     backFace.position.set(0,2,-6);
-    backFace.rotation.y = Math.PI;
-    cube.add(backFace);
+    backFace.rotation.y=Math.PI;
+    scene.add(backFace);
 
 
-    renderer.render(scene, camera);
+    // Animation
+
+    function animate(){
+
+        requestAnimationFrame(animate);
+
+        const t = Date.now()*0.001;
+
+        rightFace.position.y = 2 + Math.sin(t)*0.15;
+        backFace.position.y = 2 + Math.sin(t+1)*0.15;
+
+        renderer.render(scene,camera);
+    }
+
+    animate();
 }
 
 initCube();
@@ -370,10 +376,10 @@ initCube();
 
 // Fin session
 
-function endSession() {
+function endSession(){
 
     clearInterval(timerInterval);
-    window.location.href = "code/resultat.html";
+    window.location.href="code/resultat.html";
 }
 
 
