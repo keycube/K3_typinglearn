@@ -180,9 +180,8 @@ function finishExercise() {
 
 
 
-// ============================
-// CUBE THREE.JS
-// ============================
+
+// Cube
 
 function initCube() {
 
@@ -336,7 +335,7 @@ function initCube() {
         })
     );
 
-    rightFace.position.set(6,2,0);
+    rightFace.position.set(6,1.2,0);
     rightFace.rotation.y=-Math.PI/2;
     scene.add(rightFace);
 
@@ -349,8 +348,8 @@ function initCube() {
         })
     );
 
-    backFace.position.set(0,2,-6);
-    backFace.rotation.y=Math.PI;
+    backFace.position.set(-3.5,1.2,-5);
+    backFace.rotation.y=Math.PI/2;
     scene.add(backFace);
 
 
@@ -360,11 +359,7 @@ function initCube() {
 
         requestAnimationFrame(animate);
 
-        const t = Date.now()*0.001;
-
-        rightFace.position.y = 2 + Math.sin(t)*0.15;
-        backFace.position.y = 2 + Math.sin(t+1)*0.15;
-
+        
         renderer.render(scene,camera);
     }
 
