@@ -183,7 +183,6 @@ function finishExercise() {
 
 
 
-
 // Cube
 
 function initCube() {
@@ -192,13 +191,21 @@ function initCube() {
 
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(
-        60,
-        container.clientWidth / container.clientHeight,
+    // Camera isométrique
+    const aspect = container.clientWidth / container.clientHeight;
+    const d = 6;
+
+    const camera = new THREE.OrthographicCamera(
+        -d * aspect,
+        d * aspect,
+        d,
+        -d,
         0.1,
         1000
     );
-    camera.position.z = 6;
+
+    camera.position.set(6,6,6);
+    camera.lookAt(0,0,0);
 
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -244,22 +251,18 @@ function initCube() {
                 const x = padding + c*(keyWidth+gap);
                 const y = padding + r*(keyHeight+gap);
 
-                // Ombre floue (effet relief)
                 ctx.shadowColor = "rgba(0,0,0,0.35)";
                 ctx.shadowBlur = 10;
                 ctx.shadowOffsetX = 6;
                 ctx.shadowOffsetY = 6;
 
-                // touche principale
                 ctx.fillStyle="#e0e0e0";
                 ctx.fillRect(x,y,keyWidth,keyHeight);
 
-                // reset shadow pour les bordures
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 0;
 
-                // bord clair (haut gauche)
                 ctx.strokeStyle="#ffffff";
                 ctx.lineWidth=4;
                 ctx.beginPath();
@@ -268,7 +271,6 @@ function initCube() {
                 ctx.lineTo(x+keyWidth, y);
                 ctx.stroke();
 
-                // bord sombre (bas droite)
                 ctx.strokeStyle="#777";
                 ctx.beginPath();
                 ctx.moveTo(x+keyWidth, y);
@@ -276,7 +278,6 @@ function initCube() {
                 ctx.lineTo(x, y+keyHeight);
                 ctx.stroke();
 
-                // texte
                 ctx.fillStyle="#000";
                 ctx.font="bold 32px Arial";
                 ctx.textAlign="center";
@@ -285,7 +286,6 @@ function initCube() {
                 ctx.fillText(letter,x+keyWidth/2,y+keyHeight/2);
             }
         }
-
 
         return new THREE.CanvasTexture(canvas);
     }
@@ -347,8 +347,9 @@ function initCube() {
     const geometry=new THREE.BoxGeometry(4,4,4);
     const cube=new THREE.Mesh(geometry,materials);
 
-    cube.rotation.x=0.92;
-    cube.rotation.y=0.45;
+    // Vue isométrique
+    cube.rotation.x = 0.615;
+    cube.rotation.y = 0.785;
 
     scene.add(cube);
 
