@@ -343,13 +343,13 @@ function initCube() {
     const backFace=new THREE.Mesh(
         planeGeometry,
         new THREE.MeshStandardMaterial({
-            map:createKeyboardFace(faceBack, true),
+            map:createKeyboardFace(faceBack),
             side:THREE.DoubleSide
         })
     );
 
     backFace.position.set(-6,1.2,0);
-    backFace.rotation.y= -Math.PI/2;
+    backFace.rotation.y= Math.PI/2;
 
     //backFace.scale.x = -1;
 
