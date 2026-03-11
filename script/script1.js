@@ -348,8 +348,8 @@ function initCube() {
     const cube=new THREE.Mesh(geometry,materials);
 
     // Vue isométrique
-    cube.rotation.x = 0.7;
-    cube.rotation.y = 0.15;
+    cube.rotation.x = 0.75;
+    cube.rotation.y = Math.PI;
 
     scene.add(cube);
 
