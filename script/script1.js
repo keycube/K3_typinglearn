@@ -7,7 +7,7 @@ const TOTAL_EXERCISES_SESSION = 11;
 const SESSION_DURATION = 2100;
 
 
-// NEW
+// 
 let currentKeyHighlight = null;
 let cube;
 let renderer;
@@ -136,10 +136,11 @@ document.addEventListener("keydown", (e) => {
 
     const expected = spans[currentIndex].textContent;
 
-    // NEW
-    currentKeyHighlight = expected.toUpperCase();
-    updateCubeKeys();
-
+     if (cube) {
+        currentKeyHighlight = expected.toUpperCase();
+        updateCubeKeys();
+    }
+    
     if (e.key === expected) {
 
         spans[currentIndex].classList.remove("incorrect");
