@@ -241,12 +241,31 @@ function initCube() {
                 const x = padding + c*(keyWidth+gap);
                 const y = padding + r*(keyHeight+gap);
 
-                ctx.fillStyle="#e0e0e0";
-                ctx.fillRect(x,y,keyWidth,keyHeight);
+                // ombre sous la touche (relief)
+                ctx.fillStyle = "#bdbdbd";
+                ctx.fillRect(x+4, y+4, keyWidth, keyHeight);
 
-                ctx.strokeStyle="#999";
-                ctx.lineWidth=4;
-                ctx.strokeRect(x,y,keyWidth,keyHeight);
+                // touche principale
+                ctx.fillStyle = "#e0e0e0";
+                ctx.fillRect(x, y, keyWidth, keyHeight);
+
+                // bord clair (haut gauche)
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(x, y + keyHeight);
+                ctx.lineTo(x, y);
+                ctx.lineTo(x + keyWidth, y);
+                ctx.stroke();
+
+                // bord sombre (bas droite)
+                ctx.strokeStyle = "#888";
+                ctx.beginPath();
+                ctx.moveTo(x + keyWidth, y);
+                ctx.lineTo(x + keyWidth, y + keyHeight);
+                ctx.lineTo(x, y + keyHeight);
+                ctx.stroke();
+
 
                 ctx.fillStyle="#000";
                 ctx.font="bold 32px Arial";
