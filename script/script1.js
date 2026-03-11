@@ -195,7 +195,7 @@ function initCube() {
         0.1,
         1000
     );
-    camera.position.z = 7;
+    camera.position.z = 6;
 
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
