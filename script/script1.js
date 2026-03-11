@@ -193,7 +193,7 @@ function initCube() {
 
     // Camera isométrique
     const aspect = container.clientWidth / container.clientHeight;
-    const d = 3;
+    const d = 4;
 
     const camera = new THREE.OrthographicCamera(
         -d * aspect,
