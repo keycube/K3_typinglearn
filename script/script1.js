@@ -349,7 +349,7 @@ function initCube() {
 
     // Vue isométrique
     cube.rotation.x = 0.75;
-    cube.rotation.y = Math.PI;
+    cube.rotation.y = 0.4;
 
     scene.add(cube);
 
