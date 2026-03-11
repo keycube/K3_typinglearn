@@ -7,16 +7,6 @@ const TOTAL_EXERCISES_SESSION = 11;
 const SESSION_DURATION = 2100;
 
 
-// 
-let currentKeyHighlight = null;
-let cube;
-let renderer;
-let scene;
-let camera;
-let rightFace;
-let backFace;
-
-
 // Données exercices Partie Lettres
 
 const exercises = [
@@ -136,11 +126,6 @@ document.addEventListener("keydown", (e) => {
 
     const expected = spans[currentIndex].textContent;
 
-     if (cube) {
-        currentKeyHighlight = expected.toUpperCase();
-        updateCubeKeys();
-    }
-    
     if (e.key === expected) {
 
         spans[currentIndex].classList.remove("incorrect");
@@ -195,15 +180,16 @@ function finishExercise() {
 
 
 
+
 // Cube
 
 function initCube() {
 
     const container = document.getElementById("cube-container");
 
-    scene = new THREE.Scene();
+    const scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(
+    const camera = new THREE.PerspectiveCamera(
         60,
         container.clientWidth / container.clientHeight,
         0.1,
@@ -211,7 +197,7 @@ function initCube() {
     );
     camera.position.z = 6;
 
-    renderer = new THREE.WebGLRenderer({
+    const renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true
     });
@@ -255,7 +241,7 @@ function initCube() {
                 const x = padding + c*(keyWidth+gap);
                 const y = padding + r*(keyHeight+gap);
 
-                ctx.fillStyle = (letter === currentKeyHighlight) ? "#ffd54f" : "#e0e0e0";
+                ctx.fillStyle="#e0e0e0";
                 ctx.fillRect(x,y,keyWidth,keyHeight);
 
                 ctx.strokeStyle="#999";
@@ -329,7 +315,7 @@ function initCube() {
 
 
     const geometry=new THREE.BoxGeometry(4,4,4);
-    cube=new THREE.Mesh(geometry,materials);
+    const cube=new THREE.Mesh(geometry,materials);
 
     cube.rotation.x=0.92;
     cube.rotation.y=0.45;
@@ -337,11 +323,9 @@ function initCube() {
     scene.add(cube);
 
 
-    // Faces dupliquées
-
     const planeGeometry=new THREE.PlaneGeometry(4,4);
 
-    rightFace=new THREE.Mesh(
+    const rightFace=new THREE.Mesh(
         planeGeometry,
         new THREE.MeshStandardMaterial({
             map:createKeyboardFace(faceRight),
@@ -354,7 +338,7 @@ function initCube() {
     scene.add(rightFace);
 
 
-    backFace=new THREE.Mesh(
+    const backFace=new THREE.Mesh(
         planeGeometry,
         new THREE.MeshStandardMaterial({
             map:createKeyboardFace(faceBack),
@@ -371,31 +355,11 @@ function initCube() {
     function animate(){
 
         requestAnimationFrame(animate);
-
         renderer.render(scene,camera);
     }
 
     animate();
 }
-
-
-// 
-
-function updateCubeKeys(){
-
-    cube.material = [
-        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceRight)}),
-        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceLeft)}),
-        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceTop)}),
-        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceBottom)}),
-        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceFront)}),
-        new THREE.MeshStandardMaterial({map:createKeyboardFace(faceBack)})
-    ];
-
-    rightFace.material.map = createKeyboardFace(faceRight);
-    backFace.material.map = createKeyboardFace(faceBack);
-}
-
 
 initCube();
 
