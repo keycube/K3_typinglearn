@@ -1,5 +1,4 @@
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-import { RoundedBoxGeometry } from "https://unpkg.com/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 
 // Configuration de la session
@@ -346,9 +345,7 @@ function initCube() {
     ];
 
 
-    //const geometry=new THREE.BoxGeometry(4,4,4);
-
-    const geometry = new RoundedBoxGeometry(4, 4, 4, 6, 0.35);
+    const geometry=new THREE.BoxGeometry(4,4,4);
    
     const cube=new THREE.Mesh(geometry,materials);
 
