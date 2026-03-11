@@ -120,6 +120,10 @@ function loadExercise(index) {
 
 document.addEventListener("keydown", (e) => {
 
+    if (e.key === "Backspace") {
+        e.preventDefault();
+    }
+
     if (!spans.length) return;
     if (currentIndex >= spans.length) return;
     if (e.key.length > 1) return;
@@ -241,32 +245,39 @@ function initCube() {
                 const x = padding + c*(keyWidth+gap);
                 const y = padding + r*(keyHeight+gap);
 
-                // ombre sous la touche (relief)
-                ctx.fillStyle = "#bdbdbd";
-                ctx.fillRect(x+4, y+4, keyWidth, keyHeight);
+                // Ombre floue (effet relief)
+                ctx.shadowColor = "rgba(0,0,0,0.35)";
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetX = 6;
+                ctx.shadowOffsetY = 6;
 
                 // touche principale
-                ctx.fillStyle = "#e0e0e0";
-                ctx.fillRect(x, y, keyWidth, keyHeight);
+                ctx.fillStyle="#e0e0e0";
+                ctx.fillRect(x,y,keyWidth,keyHeight);
+
+                // reset shadow pour les bordures
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
 
                 // bord clair (haut gauche)
-                ctx.strokeStyle = "#ffffff";
-                ctx.lineWidth = 3;
+                ctx.strokeStyle="#ffffff";
+                ctx.lineWidth=4;
                 ctx.beginPath();
-                ctx.moveTo(x, y + keyHeight);
+                ctx.moveTo(x, y+keyHeight);
                 ctx.lineTo(x, y);
-                ctx.lineTo(x + keyWidth, y);
+                ctx.lineTo(x+keyWidth, y);
                 ctx.stroke();
 
                 // bord sombre (bas droite)
-                ctx.strokeStyle = "#888";
+                ctx.strokeStyle="#777";
                 ctx.beginPath();
-                ctx.moveTo(x + keyWidth, y);
-                ctx.lineTo(x + keyWidth, y + keyHeight);
-                ctx.lineTo(x, y + keyHeight);
+                ctx.moveTo(x+keyWidth, y);
+                ctx.lineTo(x+keyWidth, y+keyHeight);
+                ctx.lineTo(x, y+keyHeight);
                 ctx.stroke();
 
-
+                // texte
                 ctx.fillStyle="#000";
                 ctx.font="bold 32px Arial";
                 ctx.textAlign="center";
@@ -275,6 +286,7 @@ function initCube() {
                 ctx.fillText(letter,x+keyWidth/2,y+keyHeight/2);
             }
         }
+
 
         return new THREE.CanvasTexture(canvas);
     }
