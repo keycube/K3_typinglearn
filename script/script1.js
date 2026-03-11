@@ -336,7 +336,7 @@ function initCube() {
     );
 
     rightFace.position.set(6,1.2,0);
-    rightFace.rotation.y=-Math.PI/2;
+    rightFace.rotation.y=-Math.PI/2+0.25;
     scene.add(rightFace);
 
 
@@ -349,7 +349,7 @@ function initCube() {
     );
 
     backFace.position.set(-6,1.2,0);
-    backFace.rotation.y= Math.PI/2;
+    backFace.rotation.y= Math.PI/2-0.25;
 
     //backFace.scale.x = -1;
 
