@@ -104,10 +104,18 @@ async function loadResults() {
             </div>
         </div>
 
-        <div class="section">
-            <div class="section-title">Évolution par exercice</div>
-            <div class="chart-wrapper">
-                <canvas id="mainChart"></canvas>
+        <div class="charts-grid">
+            <div class="section">
+                <div class="section-title">WPM par exercice</div>
+                <div class="chart-wrapper"><canvas id="chartWpm"></canvas></div>
+            </div>
+            <div class="section">
+                <div class="section-title">Taux d'erreur par exercice</div>
+                <div class="chart-wrapper"><canvas id="chartError"></canvas></div>
+            </div>
+            <div class="section">
+                <div class="section-title">Temps de réaction par exercice</div>
+                <div class="chart-wrapper"><canvas id="chartReact"></canvas></div>
             </div>
         </div>
 
@@ -119,18 +127,62 @@ async function loadResults() {
         <a href="index.html" class="btn-restart">↩ Nouvelle session</a>
     `;
 
-    const ctx = document.getElementById('mainChart').getContext('2d');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                { label: 'WPM', data: wpmData },
-                { label: 'Erreur %', data: errorData },
-                { label: 'Réaction ms', data: reactData, type: 'line' }
-            ]
+    const chartDefaults = {
+        type: 'line',
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1c1c28',
+                    borderColor: '#2a2a3d',
+                    borderWidth: 1,
+                    titleColor: '#e8e8f0',
+                    bodyColor: '#6b6b8a',
+                    padding: 10,
+                    titleFont: { family: 'Space Mono', size: 11 }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#6b6b8a', font: { family: 'Space Mono', size: 10 } },
+                    grid: { color: 'rgba(0,0,0,0.06)' }
+                },
+                y: {
+                    ticks: { color: '#6b6b8a', font: { family: 'Space Mono', size: 10 } },
+                    grid: { color: 'rgba(0,0,0,0.06)' }
+                }
+            }
         }
+    };
+
+    function lineDataset(data, color) {
+        return {
+            data,
+            borderColor: color,
+            backgroundColor: color.replace('1)', '0.08)'),
+            borderWidth: 2,
+            pointBackgroundColor: color,
+            pointRadius: 5,
+            tension: 0.35,
+            fill: true
+        };
+    }
+
+    new Chart(document.getElementById('chartWpm').getContext('2d'), {
+        ...chartDefaults,
+        data: { labels, datasets: [lineDataset(wpmData, 'rgba(124,106,247,1)')] }
+    });
+
+    new Chart(document.getElementById('chartError').getContext('2d'), {
+        ...chartDefaults,
+        data: { labels, datasets: [lineDataset(errorData, 'rgba(247,106,138,1)')] }
+    });
+
+    new Chart(document.getElementById('chartReact').getContext('2d'), {
+        ...chartDefaults,
+        data: { labels, datasets: [lineDataset(reactData, 'rgba(106,247,200,1)')] }
     });
 }
 
