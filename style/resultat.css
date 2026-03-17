@@ -249,23 +249,26 @@ body::before {
 .part-badge.p3 { background: rgba(106,247,200,0.15); color: #1a9e78; }
 
 /* ── Bouton ── */
-.btn-restart {
+.btn-export {
     display: block;
-    width: fit-content;
+    width: 250px;
     margin: 0 auto;
-    padding: 12px 36px;
-    background: var(--accent);
-    color: #fff;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-decoration: none;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+    border: none;
     border-radius: 8px;
-    transition: opacity 0.2s, transform 0.2s;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    transition: 0.3s ease;
 }
 
-.btn-restart:hover { opacity: 0.85; transform: translateY(-2px); }
+.btn-export:hover {
+    background-color: #555;
+    transform: scale(1.05);
+}
+
 
 .loading {
     text-align: center;

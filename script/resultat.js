@@ -104,18 +104,10 @@ async function loadResults() {
             </div>
         </div>
 
-        <div class="charts-grid">
-            <div class="section">
-                <div class="section-title">WPM par exercice</div>
-                <div class="chart-wrapper"><canvas id="chartWpm"></canvas></div>
-            </div>
-            <div class="section">
-                <div class="section-title">Taux d'erreur par exercice</div>
-                <div class="chart-wrapper"><canvas id="chartError"></canvas></div>
-            </div>
-            <div class="section">
-                <div class="section-title">Temps de réaction par exercice</div>
-                <div class="chart-wrapper"><canvas id="chartReact"></canvas></div>
+        <div class="section">
+            <div class="section-title">Évolution par exercice</div>
+            <div class="chart-wrapper">
+                <canvas id="mainChart"></canvas>
             </div>
         </div>
 
@@ -124,65 +116,47 @@ async function loadResults() {
             <div class="exercises-grid">${rows}</div>
         </div>
 
-        <a href="index.html" class="btn-restart">↩ Nouvelle session</a>
+        <button id="btnExport" class="btn-export">Exporter les résultats</button>
     `;
 
-    const chartDefaults = {
-        type: 'line',
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#1c1c28',
-                    borderColor: '#2a2a3d',
-                    borderWidth: 1,
-                    titleColor: '#e8e8f0',
-                    bodyColor: '#6b6b8a',
-                    padding: 10,
-                    titleFont: { family: 'Space Mono', size: 11 }
-                }
+    // ── Export JSON ──
+    document.getElementById('btnExport').addEventListener('click', () => {
+        const exportData = {
+            session: {
+                id: session.id,
+                username: session.username,
+                date: session.date,
+                totalTime: session.totalTime
             },
-            scales: {
-                x: {
-                    ticks: { color: '#6b6b8a', font: { family: 'Space Mono', size: 10 } },
-                    grid: { color: 'rgba(0,0,0,0.06)' }
-                },
-                y: {
-                    ticks: { color: '#6b6b8a', font: { family: 'Space Mono', size: 10 } },
-                    grid: { color: 'rgba(0,0,0,0.06)' }
-                }
-            }
-        }
-    };
-
-    function lineDataset(data, color) {
-        return {
-            data,
-            borderColor: color,
-            backgroundColor: color.replace('1)', '0.08)'),
-            borderWidth: 2,
-            pointBackgroundColor: color,
-            pointRadius: 5,
-            tension: 0.35,
-            fill: true
+            exerciseStats: stats.map(e => ({
+                part: e.part,
+                exerciseName: e.exerciseName,
+                wpm: e.wpm,
+                errorRate: e.errorRate,
+                avgReactionTime: e.avgReactionTime
+            })),
+            summary: { avgWpm, avgError, avgReact }
         };
-    }
 
-    new Chart(document.getElementById('chartWpm').getContext('2d'), {
-        ...chartDefaults,
-        data: { labels, datasets: [lineDataset(wpmData, 'rgba(124,106,247,1)')] }
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `k3_session_${session.username}_${new Date(session.date).toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
     });
 
-    new Chart(document.getElementById('chartError').getContext('2d'), {
-        ...chartDefaults,
-        data: { labels, datasets: [lineDataset(errorData, 'rgba(247,106,138,1)')] }
-    });
-
-    new Chart(document.getElementById('chartReact').getContext('2d'), {
-        ...chartDefaults,
-        data: { labels, datasets: [lineDataset(reactData, 'rgba(106,247,200,1)')] }
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                { label: 'WPM', data: wpmData },
+                { label: 'Erreur %', data: errorData },
+                { label: 'Réaction ms', data: reactData, type: 'line' }
+            ]
+        }
     });
 }
 
