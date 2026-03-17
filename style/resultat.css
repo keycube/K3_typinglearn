@@ -20,7 +20,7 @@ body {
     color: var(--text);
     font-family: 'DM Sans', sans-serif;
     height: 100vh;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 /* Fond animé */
@@ -101,7 +101,7 @@ body::before {
     border-radius: 12px;
     padding: 18px 20px;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .kpi-card::before {
