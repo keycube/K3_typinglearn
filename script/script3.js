@@ -230,7 +230,7 @@ async function endSession() {
     // Nettoyer localStorage de session
     localStorage.removeItem("completedExercises");
     localStorage.removeItem("globalTime");
-    window.location.href = "resultat.html";
+    window.location.href = "code/resultat.html";
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
