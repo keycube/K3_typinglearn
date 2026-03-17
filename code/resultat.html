@@ -24,7 +24,23 @@
         </div>
     </div>
 
+    <button onclick="clearDB()" style="position:fixed;bottom:20px;right:20px;padding:10px;background:red;color:white;border:none;border-radius:6px;cursor:pointer;">Purger la base</button>
+
+        <script type="module">
+            import Dexie from "https://unpkg.com/dexie@3.2.4/dist/dexie.mjs";
+            window.clearDB = async () => {
+                const db = new Dexie("K3TypingDB");
+                await db.delete();
+                alert("Base purgée !");
+            }
+        </script>
+
+    </script type="module" src="script/resultat.js"></script>
+</body>
+
+
     <!-- JS -->
     <script type="module" src="script/resultat.js"></script>
+
 </body>
 </html>
