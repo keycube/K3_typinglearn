@@ -19,5 +19,6 @@ document.getElementById("startBtn").addEventListener("click", function() {
     }
 
     localStorage.setItem("username", username);
+    localStorage.setItem("exerciseOrder", "0");
     window.location.href = "code/part1.html";
 });

@@ -189,9 +189,12 @@ async function finishExercise() {
 
     const metrics = computeMetrics();
     const session = await getOrCreateSession();
+    const order = parseInt(localStorage.getItem("exerciseOrder") || "0");
+    localStorage.setItem("exerciseOrder", order + 1);
     await saveExerciseStat({
         sessionId: session.id,
         part: 3,
+        order,
         exerciseName: exercises[currentExerciseIndex].name,
         wpm: metrics.wpm,
         errorRate: metrics.errorRate,

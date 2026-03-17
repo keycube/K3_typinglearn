@@ -183,9 +183,12 @@ async function finishExercise() {
     // Sauvegarder métriques
     const metrics = computeMetrics();
     const session = await getOrCreateSession();
+    const order = parseInt(localStorage.getItem("exerciseOrder") || "0");
+    localStorage.setItem("exerciseOrder", order + 1);
     await saveExerciseStat({
         sessionId: session.id,
         part: 1,
+        order,
         exerciseName: exercises[currentExerciseIndex].name,
         wpm: metrics.wpm,
         errorRate: metrics.errorRate,
@@ -216,8 +219,7 @@ async function endSession() {
     window.location.href = "code/resultat.html";
 }
 
-// ─── Cube Three.js (inchangé) ─────────────────────────────────────────────────
-
+// ─── Cube Three.js 
 function initCube() {
     const container = document.getElementById("cube-container");
     const scene = new THREE.Scene();
