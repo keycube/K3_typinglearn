@@ -274,35 +274,37 @@ function initCube() {
     const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
     const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
+    // Three.js BoxGeometry slots: [+X, -X, +Y, -Y, +Z, -Z]
+    // Avec rotation.y = -PI/4 : +Z = avant-droite, -X = avant-gauche, +Y = haut
+    // On veut : avant-droite = faceFront, avant-gauche = faceLeft, haut = faceTop
     const materials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) })
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),    // +X (caché)
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),    // -X → avant-gauche
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),     // +Y → dessus
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),  // -Y (caché)
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),   // +Z → avant-droite
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })    // -Z (caché)
     ];
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
     const cube = new THREE.Mesh(geometry, materials);
-    // faceLeft à gauche, faceFront à droite, faceTop bien visible en haut
     cube.rotation.x = 0.5;
     cube.rotation.y = -Math.PI / 4;
     scene.add(cube);
 
     const planeGeometry = new THREE.PlaneGeometry(4, 4);
 
-    // faceBack dépliée en haut à gauche, face caméra
-    const backFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-    backFace.position.set(-6.5, 3, 0);
-    backFace.rotation.y = 0;
-    scene.add(backFace);
-
     // faceRight dépliée à droite, face caméra
     const rightFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
     rightFace.position.set(6.5, 1, 0);
     rightFace.rotation.y = 0;
     scene.add(rightFace);
+
+    // faceBack dépliée en haut à gauche, face caméra
+    const backFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
+    backFace.position.set(-6.5, 3, 0);
+    backFace.rotation.y = 0;
+    scene.add(backFace);
 
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
