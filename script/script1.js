@@ -285,23 +285,24 @@ function initCube() {
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
     const cube = new THREE.Mesh(geometry, materials);
-    cube.rotation.x = Math.PI / 6;
-    cube.rotation.y = Math.PI / 5.5;
+    // faceLeft à gauche, faceFront à droite, faceTop bien visible en haut
+    cube.rotation.x = 0.5;
+    cube.rotation.y = -Math.PI / 4;
     scene.add(cube);
 
     const planeGeometry = new THREE.PlaneGeometry(4, 4);
 
-    // faceRight — dépliée à droite, face caméra
-    const rightFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
-    rightFace.position.set(7, 2, 0);
-    rightFace.rotation.y = 0;
-    scene.add(rightFace);
-
-    // faceBack — dépliée en haut à gauche, face caméra
+    // faceBack dépliée en haut à gauche, face caméra
     const backFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-    backFace.position.set(-5.5, 3.5, 0);
+    backFace.position.set(-6.5, 3, 0);
     backFace.rotation.y = 0;
     scene.add(backFace);
+
+    // faceRight dépliée à droite, face caméra
+    const rightFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
+    rightFace.position.set(6.5, 1, 0);
+    rightFace.rotation.y = 0;
+    scene.add(rightFace);
 
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
