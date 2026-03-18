@@ -1,27 +1,17 @@
-import Dexie from "https://unpkg.com/dexie@3.2.4/dist/dexie.mjs";
-
-const db = new Dexie("K3TypingDB");
-db.version(1).stores({
-    sessions: "++id, username, date",
-    exerciseStats: "++id, sessionId, part, exerciseName"
-});
+import { db, exportSessionToDexie } from "./db.js";
 
 async function loadResults() {
 
-    const sessionId = parseInt(sessionStorage.getItem("sessionId"));
     const content = document.getElementById("content");
 
-    if (!sessionId) {
-        content.innerHTML = `<div class="loading">Aucune session trouvée.</div>`;
-        return;
-    }
+    // Lire depuis sessionStorage
+    const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]")
+        .sort((a, b) => a.order - b.order);
+    const totalTime = parseInt(sessionStorage.getItem("sessionTotalTime") || "0");
+    const username  = localStorage.getItem("username") || "Invité";
+    const date      = new Date().toISOString();
 
-    const session = await db.sessions.get(sessionId);
-    const stats = (await db.exerciseStats
-        .where("sessionId").equals(sessionId).toArray())
-        .sort((a, b) => a.order !== undefined && b.order !== undefined ? a.order - b.order : a.id - b.id);
-
-    if (!session || stats.length === 0) {
+    if (stats.length === 0) {
         content.innerHTML = `<div class="loading">Aucune donnée disponible.</div>`;
         return;
     }
@@ -30,12 +20,11 @@ async function loadResults() {
     const avgError = Math.round(stats.reduce((s, e) => s + e.errorRate, 0) / stats.length);
     const avgReact = Math.round(stats.reduce((s, e) => s + e.avgReactionTime, 0) / stats.length);
 
-    const totalMin = Math.floor(session.totalTime / 60);
-    const totalSec = session.totalTime % 60;
+    const totalMin = Math.floor(totalTime / 60);
+    const totalSec = totalTime % 60;
     const timeStr  = String(totalMin).padStart(2,'0') + ":" + String(totalSec).padStart(2,'0');
 
-    const date    = new Date(session.date);
-    const dateStr = date.toLocaleDateString('fr-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+    const dateStr = new Date(date).toLocaleDateString('fr-CA', { year: 'numeric', month: 'long', day: 'numeric' });
 
     function errorClass(rate) {
         if (rate <= 5)  return 'error-good';
@@ -81,7 +70,7 @@ async function loadResults() {
                 <div class="subtitle">Durée totale : ${timeStr}</div>
             </div>
             <div class="header-meta">
-                <div class="username">${session.username}</div>
+                <div class="username">${username}</div>
                 <div class="date">${dateStr}</div>
             </div>
         </div>
@@ -127,34 +116,24 @@ async function loadResults() {
         <button id="btnExport" class="btn-export">Exporter les résultats</button>
     `;
 
-    // Export JSON
-    document.getElementById('btnExport').addEventListener('click', () => {
-        const exportData = {
-            session: {
-                id: session.id,
-                username: session.username,
-                date: session.date,
-                totalTime: session.totalTime
-            },
-            exerciseStats: stats.map(e => ({
-                part: e.part,
-                exerciseName: e.exerciseName,
-                wpm: e.wpm,
-                errorRate: e.errorRate,
-                avgReactionTime: e.avgReactionTime
-            })),
-            summary: { avgWpm, avgError, avgReact }
-        };
-        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement('a');
-        a.href     = url;
-        a.download = `k3_session_${session.username}_${new Date(session.date).toISOString().slice(0,10)}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
+    // ── Export vers Dexie au clic ──
+    document.getElementById('btnExport').addEventListener('click', async () => {
+        const btn = document.getElementById('btnExport');
+        btn.disabled = true;
+        btn.textContent = 'Exportation…';
+        try {
+            await exportSessionToDexie({ username, date, totalTime, stats });
+            btn.textContent = '✓ Exporté dans la base';
+            btn.style.backgroundColor = '#2a9d6a';
+        } catch (err) {
+            console.error(err);
+            btn.textContent = 'Erreur lors de l\'export';
+            btn.style.backgroundColor = '#c0392b';
+            btn.disabled = false;
+        }
     });
 
-    // 3 graphiques en courbe
+    // ── 3 graphiques en courbe ──
     function makeChart(canvasId, data, color) {
         const ctx = document.getElementById(canvasId).getContext('2d');
         new Chart(ctx, {

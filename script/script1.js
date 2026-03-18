@@ -1,5 +1,4 @@
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-import { getOrCreateSession, saveExerciseStat, finalizeSession } from "./db.js";
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
@@ -180,22 +179,21 @@ async function finishExercise() {
     const exElement = document.getElementById(exId);
     if (exElement) exElement.classList.add("done");
 
-    // Sauvegarder métriques
+    // Sauvegarder métriques dans sessionStorage
     const metrics = computeMetrics();
-    const session = await getOrCreateSession();
     const order = parseInt(localStorage.getItem("exerciseOrder") || "0");
     localStorage.setItem("exerciseOrder", order + 1);
-    await saveExerciseStat({
-        sessionId: session.id,
+
+    const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]");
+    stats.push({
         part: 1,
         order,
         exerciseName: exercises[currentExerciseIndex].name,
         wpm: metrics.wpm,
         errorRate: metrics.errorRate,
-        avgReactionTime: metrics.avgReactionTime,
-        typed: metrics.typed,
-        expected: metrics.expected
+        avgReactionTime: metrics.avgReactionTime
     });
+    sessionStorage.setItem("sessionStats", JSON.stringify(stats));
 
     let completed = parseInt(localStorage.getItem("completedExercises")) || 0;
     completed++;
@@ -215,7 +213,7 @@ async function finishExercise() {
 
 async function endSession() {
     clearInterval(timerInterval);
-    await finalizeSession(seconds);
+    sessionStorage.setItem("sessionTotalTime", seconds);
     window.location.href = "code/resultat.html";
 }
 

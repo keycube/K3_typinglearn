@@ -1,4 +1,4 @@
-import { getOrCreateSession, saveExerciseStat, finalizeSession } from "./db.js";
+// script2.js
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
@@ -200,20 +200,19 @@ async function finishExercise() {
     if (el) el.classList.add("done");
 
     const metrics = computeMetrics();
-    const session = await getOrCreateSession();
     const order = parseInt(localStorage.getItem("exerciseOrder") || "0");
     localStorage.setItem("exerciseOrder", order + 1);
-    await saveExerciseStat({
-        sessionId: session.id,
+
+    const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]");
+    stats.push({
         part: 2,
         order,
         exerciseName: exercises[currentExerciseIndex].name,
         wpm: metrics.wpm,
         errorRate: metrics.errorRate,
-        avgReactionTime: metrics.avgReactionTime,
-        typed: metrics.typed,
-        expected: metrics.expected
+        avgReactionTime: metrics.avgReactionTime
     });
+    sessionStorage.setItem("sessionStats", JSON.stringify(stats));
 
     let completed = parseInt(localStorage.getItem("completedExercises")) || 0;
     completed++;
@@ -240,7 +239,7 @@ async function finishExercise() {
 
 async function endSession() {
     clearInterval(timerInterval);
-    await finalizeSession(seconds);
+    sessionStorage.setItem("sessionTotalTime", seconds);
     window.location.href = "code/resultat.html";
 }
 
