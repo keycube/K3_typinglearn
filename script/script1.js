@@ -267,41 +267,12 @@ function initCube() {
         return new THREE.CanvasTexture(canvas);
     }
 
-    const faceFront =
-     [["alt","OS","ctrl","shift"],
-     [",<",".>","/?",""],
-     [":;","'","Tab","`~"],
-     ["{[","]}","|",""]];
-
-    const faceBack = 
-    [["","V","F","R"],
-    ["","C","D","E"],
-    ["","X","S","W"],
-    ["","Z","A","Q"]];
-
-    const faceRight = 
-    [["U","J","B",""],
-    ["I","K","N",""],
-    ["O","L","M",""],
-    ["P","","",""]];
-
-    const faceLeft = 
-    [["shift","ctrl","OS","alt"],
-    ["7&","8*","9(","0)"],
-    ["4$","5%","6^","-_"],
-    ["1!","2@","3#","+="]];
-
-    const faceTop = 
-    [["Sp","G","T","CpLk"],
-    ["Sp","Left","Up","Y"],
-    ["Sp","Dwn","Right","H"],
-    ["Entr","Entr","Bks","Bks"]];
-
-    const faceBottom = 
-    [["","","",""],
-    ["","","",""],
-    ["","","",""],
-    ["","","",""]];
+    const faceFront = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
+    const faceBack = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
+    const faceRight = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
+    const faceLeft = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
+    const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
+    const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
     const materials = [
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
@@ -314,18 +285,22 @@ function initCube() {
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
     const cube = new THREE.Mesh(geometry, materials);
-    
-    cube.rotation.x = Math.PI / 6;  
-    cube.rotation.y = Math.PI / 4;  
+    cube.rotation.x = Math.PI / 6;
+    cube.rotation.y = Math.PI / 3.2;
     scene.add(cube);
 
     const planeGeometry = new THREE.PlaneGeometry(4, 4);
+
+    // faceRight — dépliée à droite, face caméra
     const rightFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
-    rightFace.position.set(6, 1.2, 0); rightFace.rotation.y = -Math.PI / 2;
+    rightFace.position.set(7, 2, 0);
+    rightFace.rotation.y = 0;
     scene.add(rightFace);
 
+    // faceBack — dépliée en haut à gauche, face caméra
     const backFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-    backFace.position.set(-6, 1.2, 0); backFace.rotation.y = Math.PI / 2;
+    backFace.position.set(-5.5, 3.5, 0);
+    backFace.rotation.y = 0;
     scene.add(backFace);
 
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
