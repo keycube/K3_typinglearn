@@ -182,7 +182,7 @@ async function loadResults() {
 
     makeChart('chartWpm',   wpmData,   'rgba(124,106,247,1)');
     makeChart('chartError', errorData, 'rgba(247,106,138,1)');
-    makeChart('chartReact', reactData, 'rgba(106,247,200,1)');
+    makeChart('chartReact', reactData, 'rgba(32,180,134,1)');
 }
 
 loadResults();
