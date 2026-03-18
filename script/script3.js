@@ -1,12 +1,11 @@
-// script3.js
 
-// ─── Configuration ────────────────────────────────────────────────────────────
+
+// Configuration 
 
 const TOTAL_EXERCISES_SESSION = 11;
 const SESSION_DURATION = 2100;
 
-// ─── Exercices ────────────────────────────────────────────────────────────────
-
+//  Exercices 
 const exercises = [
     {
         name: "Courtes",
@@ -22,7 +21,7 @@ const exercises = [
     }
 ];
 
-// ─── État ─────────────────────────────────────────────────────────────────────
+//  État
 
 let currentExerciseIndex = 0;
 let currentSentenceIndex = 0;
@@ -35,7 +34,7 @@ let allKeyTimestamps = [];
 let allTypedChars = [];
 let allExpectedChars = [];
 
-// ─── Chronomètre global ───────────────────────────────────────────────────────
+// Chronomètre global 
 
 let seconds = parseInt(localStorage.getItem("globalTime")) || 0;
 updateTimerDisplay();
@@ -54,7 +53,7 @@ function updateTimerDisplay() {
         String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
 }
 
-// ─── Progression ──────────────────────────────────────────────────────────────
+//  Progression 
 
 function updateGlobalProgress() {
     const completed = parseInt(localStorage.getItem("completedExercises")) || 0;
@@ -63,7 +62,7 @@ function updateGlobalProgress() {
     document.getElementById("progressPercent").textContent = percent + "%";
 }
 
-// ─── Curseur ──────────────────────────────────────────────────────────────────
+//  Curseur 
 
 function updateCursor() {
     const cursor = document.getElementById("cursor");
@@ -74,7 +73,7 @@ function updateCursor() {
     cursor.style.top = (rect.top - containerRect.top) + "px";
 }
 
-// ─── Chargement phrase ────────────────────────────────────────────────────────
+// Chargement phrase 
 
 function loadSentence() {
     const textDisplay = document.getElementById("textDisplay");
@@ -98,7 +97,7 @@ function loadSentence() {
     setTimeout(updateCursor, 50);
 }
 
-// ─── Distance de Levenshtein ──────────────────────────────────────────────────
+//  Distance de Levenshtein 
 
 function levenshtein(a, b) {
     const m = a.length, n = b.length;
@@ -115,7 +114,7 @@ function levenshtein(a, b) {
     return dp[m][n];
 }
 
-// ─── Gestion frappe ───────────────────────────────────────────────────────────
+// Gestion frappe
 
 document.addEventListener("keydown", (e) => {
     if (!spans.length || currentIndex >= spans.length || e.key.length > 1) return;
@@ -140,7 +139,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// ─── Phrase suivante ──────────────────────────────────────────────────────────
+//  Phrase suivante
 
 function nextSentence() {
     currentSentenceIndex++;
@@ -151,7 +150,7 @@ function nextSentence() {
     }
 }
 
-// ─── Calcul métriques ─────────────────────────────────────────────────────────
+// Calcul métriques 
 
 function computeMetrics() {
     const typedText = allTypedChars.join("");
@@ -180,7 +179,7 @@ function computeMetrics() {
     return { wpm, errorRate, avgReactionTime, typed: typedText, expected: expectedText };
 }
 
-// ─── Fin exercice ─────────────────────────────────────────────────────────────
+// Fin exercice 
 
 async function finishExercise() {
     const exId = "ex" + (currentExerciseIndex + 1);
@@ -219,12 +218,12 @@ async function finishExercise() {
     if (currentExerciseIndex < exercises.length) {
         setTimeout(loadSentence, 800);
     } else {
-        // Fin de toutes les parties → résultat
+        // Fin de la session
         setTimeout(() => endSession(), 500);
     }
 }
 
-// ─── Fin session ──────────────────────────────────────────────────────────────
+// Fin session 
 
 async function endSession() {
     clearInterval(timerInterval);
@@ -234,7 +233,7 @@ async function endSession() {
     window.location.href = "code/resultat.html";
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+// Init
 
 updateGlobalProgress();
 loadSentence();

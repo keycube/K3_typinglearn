@@ -1,11 +1,10 @@
-// script2.js
 
-// ─── Configuration ────────────────────────────────────────────────────────────
+// Configuration 
 
 const TOTAL_EXERCISES_SESSION = 11;
 const SESSION_DURATION = 2100;
 
-// ─── Exercices ────────────────────────────────────────────────────────────────
+// Exercices 
 
 const exercises = [
     {
@@ -28,7 +27,7 @@ const exercises = [
     }
 ];
 
-// ─── État ─────────────────────────────────────────────────────────────────────
+//  État 
 
 let currentExerciseIndex = 0;
 let currentWordIndex = 0;
@@ -37,17 +36,17 @@ let spans = [];
 
 // Métriques accumulées sur l'exercice courant
 let exerciseStartTime = null;
-let allKeyTimestamps = [];   // tous les timestamps de frappes correctes de l'exercice
-let allTypedChars = [];      // tous les caractères tapés (bonne ou mauvaise frappe)
-let allExpectedChars = [];   // tous les caractères attendus
+let allKeyTimestamps = [];   
+let allTypedChars = [];      
+let allExpectedChars = [];   
 
-// ─── Utilisateur ──────────────────────────────────────────────────────────────
+//  Utilisateur
 
 const username = localStorage.getItem("username");
 if (document.getElementById("usernameDisplay"))
     document.getElementById("usernameDisplay").textContent = username || "Invité";
 
-// ─── Chronomètre global ───────────────────────────────────────────────────────
+//  Chronomètre global 
 
 let seconds = parseInt(localStorage.getItem("globalTime")) || 0;
 updateTimerDisplay();
@@ -66,7 +65,7 @@ function updateTimerDisplay() {
         String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
 }
 
-// ─── Progression ──────────────────────────────────────────────────────────────
+//  Progression 
 
 function updateGlobalProgress() {
     const completed = parseInt(localStorage.getItem("completedExercises")) || 0;
@@ -75,7 +74,7 @@ function updateGlobalProgress() {
     document.getElementById("progressPercent").textContent = percent + "%";
 }
 
-// ─── Curseur ──────────────────────────────────────────────────────────────────
+//  Curseur
 
 function updateCursor() {
     const cursor = document.getElementById("cursor");
@@ -86,7 +85,7 @@ function updateCursor() {
     cursor.style.top = (rect.top - containerRect.top) + "px";
 }
 
-// ─── Chargement mot ───────────────────────────────────────────────────────────
+// Chargement mot
 
 function loadWord() {
     const textDisplay = document.getElementById("textDisplay");
@@ -110,7 +109,7 @@ function loadWord() {
     setTimeout(updateCursor, 50);
 }
 
-// ─── Distance de Levenshtein ──────────────────────────────────────────────────
+//  Distance de Levenshtein 
 
 function levenshtein(a, b) {
     const m = a.length, n = b.length;
@@ -127,7 +126,7 @@ function levenshtein(a, b) {
     return dp[m][n];
 }
 
-// ─── Gestion frappe ───────────────────────────────────────────────────────────
+//  Gestion frappe 
 
 document.addEventListener("keydown", (e) => {
     if (!spans.length || currentIndex >= spans.length || e.key.length > 1) return;
@@ -152,7 +151,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// ─── Mot suivant ──────────────────────────────────────────────────────────────
+//  Mot suivant 
 
 function nextWord() {
     currentWordIndex++;
@@ -163,7 +162,7 @@ function nextWord() {
     }
 }
 
-// ─── Calcul métriques ─────────────────────────────────────────────────────────
+//  Calcul métriques
 
 function computeMetrics() {
     const typedText = allTypedChars.join("");
@@ -192,7 +191,7 @@ function computeMetrics() {
     return { wpm, errorRate, avgReactionTime, typed: typedText, expected: expectedText };
 }
 
-// ─── Fin exercice ─────────────────────────────────────────────────────────────
+// Fin exercice
 
 async function finishExercise() {
     const exId = "ex" + (currentExerciseIndex + 1);
@@ -235,7 +234,7 @@ async function finishExercise() {
     }
 }
 
-// ─── Fin session ──────────────────────────────────────────────────────────────
+//  Fin session 
 
 async function endSession() {
     clearInterval(timerInterval);
@@ -243,7 +242,7 @@ async function endSession() {
     window.location.href = "code/resultat.html";
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+// Init 
 
 updateGlobalProgress();
 loadWord();

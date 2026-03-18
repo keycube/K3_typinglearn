@@ -1,11 +1,11 @@
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 
-// ─── Configuration ────────────────────────────────────────────────────────────
+// Configuration 
 
 const TOTAL_EXERCISES_SESSION = 11;
 const SESSION_DURATION = 2100;
 
-// ─── Exercices ────────────────────────────────────────────────────────────────
+// Exercices 
 
 const exercises = [
     { name: "FJ", text: "jjjj ffff jjff jj ffjj ff j f ffjf fj fffjj ffjjjjf ffjjff jffjfjfj ffjjfj fjjf ffjjffj" },
@@ -14,7 +14,7 @@ const exercises = [
     { name: "SL", text: "ssss llll ssll slsl s l sllsthfj jjtylls lsslsjgh slfjhstl ytyghls tytlsssll gghhlsytls" }
 ];
 
-// ─── État ─────────────────────────────────────────────────────────────────────
+//  État 
 
 let currentExerciseIndex = 0;
 let currentIndex = 0;
@@ -22,16 +22,16 @@ let spans = [];
 
 // Métriques par exercice
 let exerciseStartTime = null;
-let keyTimestamps = [];       // timestamps de chaque frappe correcte
-let typedChars = [];          // caractères tapés (y compris erreurs)
+let keyTimestamps = [];       
+let typedChars = [];          
 let errorCount = 0;
 
-// ─── Utilisateur ──────────────────────────────────────────────────────────────
+// Utilisateur 
 
 const username = localStorage.getItem("username");
 document.getElementById("usernameDisplay").textContent = username || "Invité";
 
-// ─── Chronomètre global ───────────────────────────────────────────────────────
+// Chronomètre global 
 
 let seconds = parseInt(localStorage.getItem("globalTime")) || 0;
 updateTimerDisplay();
@@ -50,7 +50,7 @@ function updateTimerDisplay() {
         String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
 }
 
-// ─── Progression ──────────────────────────────────────────────────────────────
+// Progression 
 
 function updateGlobalProgress() {
     const completed = parseInt(localStorage.getItem("completedExercises")) || 0;
@@ -59,7 +59,7 @@ function updateGlobalProgress() {
     document.getElementById("progressPercent").textContent = percent + "%";
 }
 
-// ─── Curseur ──────────────────────────────────────────────────────────────────
+// Curseur
 
 function updateCursor() {
     const cursor = document.getElementById("cursor");
@@ -70,7 +70,7 @@ function updateCursor() {
     cursor.style.top = (rect.top - containerRect.top) + "px";
 }
 
-// ─── Chargement exercice ──────────────────────────────────────────────────────
+//  Chargement exercice 
 
 function loadExercise(index) {
     const textDisplay = document.getElementById("textDisplay");
@@ -100,7 +100,7 @@ function loadExercise(index) {
     setTimeout(updateCursor, 50);
 }
 
-// ─── Distance de Levenshtein ──────────────────────────────────────────────────
+//  Distance de Levenshtein 
 
 function levenshtein(a, b) {
     const m = a.length, n = b.length;
@@ -117,7 +117,7 @@ function levenshtein(a, b) {
     return dp[m][n];
 }
 
-// ─── Gestion frappe ───────────────────────────────────────────────────────────
+//  Gestion frappe 
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") e.preventDefault();
@@ -144,7 +144,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// ─── Calcul métriques ─────────────────────────────────────────────────────────
+// Calcul métriques 
 
 function computeMetrics() {
     const expectedText = exercises[currentExerciseIndex].text;
@@ -172,7 +172,7 @@ function computeMetrics() {
     return { wpm, errorRate, avgReactionTime, typed: typedText, expected: expectedText };
 }
 
-// ─── Fin exercice ─────────────────────────────────────────────────────────────
+// Fin exercice 
 
 async function finishExercise() {
     const exId = "ex" + (currentExerciseIndex + 1);
@@ -209,7 +209,7 @@ async function finishExercise() {
     }
 }
 
-// ─── Fin session ──────────────────────────────────────────────────────────────
+// Fin session 
 
 async function endSession() {
     clearInterval(timerInterval);
@@ -217,7 +217,7 @@ async function endSession() {
     window.location.href = "code/resultat.html";
 }
 
-// ─── Cube Three.js 
+// Cube Three.js 
 function initCube() {
     const container = document.getElementById("cube-container");
     const scene = new THREE.Scene();
@@ -274,16 +274,14 @@ function initCube() {
     const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
     const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
-    // Slots Three.js [+X, -X, +Y, -Y, +Z, -Z]
-    // rotation.y = +PI/4 expose: -X à droite, +Z à gauche, +Y en haut
-    // → -X = faceFront, +Z = faceLeft, +Y = faceTop
+   
     const materials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),    // +X caché
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),   // -X → droite visible
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),     // +Y → haut visible
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),  // -Y caché
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),    // +Z → gauche visible
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })    // -Z caché
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),    
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),   
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),    
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),  
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),    
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })    
     ];
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
@@ -294,13 +292,13 @@ function initCube() {
 
     const planeGeometry = new THREE.PlaneGeometry(4, 4);
 
-    // faceRight dépliée à droite, face caméra
+    // faceRight dédoublée
     const rightFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
     rightFace.position.set(6.5, 1, 0);
     rightFace.rotation.y = 0;
     scene.add(rightFace);
 
-    // faceBack dépliée en haut à gauche, face caméra
+    // faceBack ddédoublée
     const backFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
     backFace.position.set(-6.5, 3, 0);
     backFace.rotation.y = 0;
