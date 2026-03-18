@@ -267,12 +267,41 @@ function initCube() {
         return new THREE.CanvasTexture(canvas);
     }
 
-    const faceFront = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
-    const faceBack = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
-    const faceRight = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
-    const faceLeft = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
-    const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
-    const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
+    const faceFront =
+     [["alt","OS","ctrl","shift"],
+     [",<",".>","/?",""],
+     [":;","'","Tab","`~"],
+     ["{[","]}","|",""]];
+
+    const faceBack = 
+    [["","V","F","R"],
+    ["","C","D","E"],
+    ["","X","S","W"],
+    ["","Z","A","Q"]];
+
+    const faceRight = 
+    [["U","J","B",""],
+    ["I","K","N",""],
+    ["O","L","M",""],
+    ["P","","",""]];
+
+    const faceLeft = 
+    [["shift","ctrl","OS","alt"],
+    ["7&","8*","9(","0)"],
+    ["4$","5%","6^","-_"],
+    ["1!","2@","3#","+="]];
+
+    const faceTop = 
+    [["Sp","G","T","CpLk"],
+    ["Sp","Left","Up","Y"],
+    ["Sp","Dwn","Right","H"],
+    ["Entr","Entr","Bks","Bks"]];
+
+    const faceBottom = 
+    [["","","",""],
+    ["","","",""],
+    ["","","",""],
+    ["","","",""]];
 
     const materials = [
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),
@@ -285,7 +314,9 @@ function initCube() {
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
     const cube = new THREE.Mesh(geometry, materials);
-    cube.rotation.x = Math.PI / 6; cube.rotation.y = -Math.PI / 4;
+    
+    cube.rotation.x = Math.PI / 6;  
+    cube.rotation.y = Math.PI / 4;  
     scene.add(cube);
 
     const planeGeometry = new THREE.PlaneGeometry(4, 4);
