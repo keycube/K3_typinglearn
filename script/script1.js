@@ -274,16 +274,15 @@ function initCube() {
     const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
     const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
-    // Three.js BoxGeometry slots: [+X, -X, +Y, -Y, +Z, -Z]
-    // Avec rotation.y = -PI/4 : +Z = avant-droite, -X = avant-gauche, +Y = haut
-    // On veut : avant-droite = faceFront, avant-gauche = faceLeft, haut = faceTop
+    // Slots Three.js: [+X, -X, +Y, -Y, +Z, -Z]
+    // rotation.y = -PI/4 expose: +X à droite, -Z à gauche, +Y en haut
     const materials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),    // +X (caché)
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),    // -X → avant-gauche
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),     // +Y → dessus
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),  // -Y (caché)
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),   // +Z → avant-droite
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })    // -Z (caché)
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),   // +X → droite visible
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) }),   // -X → caché
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),     // +Y → haut visible
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),  // -Y → caché
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),    // +Z → caché
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) })     // -Z → gauche visible
     ];
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
