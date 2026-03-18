@@ -285,7 +285,7 @@ function initCube() {
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
     const cube = new THREE.Mesh(geometry, materials);
-    cube.rotation.x = 0.75; cube.rotation.y = 0.4;
+    cube.rotation.x = Math.PI / 6; cube.rotation.y = -Math.PI / 4;
     scene.add(cube);
 
     const planeGeometry = new THREE.PlaneGeometry(4, 4);
