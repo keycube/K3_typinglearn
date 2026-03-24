@@ -19,27 +19,33 @@ const exercises = [
 let currentExerciseIndex = 0;
 let currentIndex = 0;
 let spans = [];
-
-// 🆕 touche actuelle à highlight
 let currentTargetKey = null;
 
-// Métriques par exercice
+// 🆕 cube refs
+let cubeMaterials = [];
+let rightFaceMesh = null;
+let backFaceMesh = null;
+
+// 🆕 layouts globaux
+const faceFront = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
+const faceBack = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
+const faceRight = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
+const faceLeft = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
+const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
+const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
+
+// Métriques
 let exerciseStartTime = null;
 let keyTimestamps = [];       
 let typedChars = [];          
 let errorCount = 0;
-
-// 🆕 références cube
-let cubeMaterials = [];
-let rightFaceMesh = null;
-let backFaceMesh = null;
 
 // Utilisateur 
 
 const username = localStorage.getItem("username");
 document.getElementById("usernameDisplay").textContent = username || "Invité";
 
-// Chronomètre global 
+// Timer 
 
 let seconds = parseInt(localStorage.getItem("globalTime")) || 0;
 updateTimerDisplay();
@@ -67,13 +73,15 @@ function updateGlobalProgress() {
     document.getElementById("progressPercent").textContent = percent + "%";
 }
 
-// Curseur
+// Curseur 
 
 function updateCursor() {
     const cursor = document.getElementById("cursor");
     if (!cursor || currentIndex >= spans.length) return;
+
     const rect = spans[currentIndex].getBoundingClientRect();
     const containerRect = document.getElementById("textDisplay").getBoundingClientRect();
+
     cursor.style.left = (rect.left - containerRect.left) + "px";
     cursor.style.top = (rect.top - containerRect.top) + "px";
 }
@@ -104,13 +112,15 @@ function loadExercise(index) {
     cursor.id = "cursor";
     textDisplay.appendChild(cursor);
 
-    // 🆕 init highlight
-    updateCurrentTargetKey();
-
-    setTimeout(updateCursor, 50);
+    // 🔥 FIX curseur + highlight timing
+    setTimeout(() => {
+        updateCursor();
+        updateCurrentTargetKey();
+    }, 50);
 }
 
-// 🆕 MAJ touche attendue
+// 🆕 touche cible
+
 function updateCurrentTargetKey() {
     if (currentIndex < spans.length) {
         currentTargetKey = spans[currentIndex].textContent.toUpperCase();
@@ -118,23 +128,6 @@ function updateCurrentTargetKey() {
         currentTargetKey = null;
     }
     updateCubeTextures();
-}
-
-// Distance de Levenshtein 
-
-function levenshtein(a, b) {
-    const m = a.length, n = b.length;
-    const dp = Array.from({ length: m + 1 }, (_, i) =>
-        Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
-    );
-    for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-            dp[i][j] = a[i - 1] === b[j - 1]
-                ? dp[i - 1][j - 1]
-                : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
-        }
-    }
-    return dp[m][n];
 }
 
 // Gestion frappe 
@@ -156,8 +149,7 @@ document.addEventListener("keydown", (e) => {
         keyTimestamps.push(now);
         currentIndex++;
 
-        // 🆕 update highlight après bonne frappe
-        updateCurrentTargetKey();
+        updateCurrentTargetKey(); // 🔥 update highlight
 
         updateCursor();
         if (currentIndex === spans.length) finishExercise();
@@ -167,13 +159,15 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// 🆕 Création texture avec highlight
+// 🆕 texture avec highlight
+
 function createKeyboardFace(layout) {
     const canvas = document.createElement("canvas");
-    canvas.width = 512; canvas.height = 512;
+    canvas.width = 512; 
+    canvas.height = 512;
     const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = "#ffffff"; 
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, 512, 512);
 
     const rows = layout.length, cols = layout[0].length;
@@ -187,9 +181,8 @@ function createKeyboardFace(layout) {
             const x = padding + c * (keyWidth + gap);
             const y = padding + r * (keyHeight + gap);
 
-            // 🆕 highlight si correspond
-            if (letter.toUpperCase() === currentTargetKey) {
-                ctx.fillStyle = "#ffcc00"; // jaune/orange
+            if (letter && letter.toUpperCase() === currentTargetKey) {
+                ctx.fillStyle = "#ffcc00";
             } else {
                 ctx.fillStyle = "#e0e0e0";
             }
@@ -208,6 +201,7 @@ function createKeyboardFace(layout) {
 }
 
 // 🆕 refresh textures
+
 function updateCubeTextures() {
     if (!cubeMaterials.length) return;
 
@@ -218,27 +212,29 @@ function updateCubeTextures() {
     cubeMaterials[4].map = createKeyboardFace(faceLeft);
     cubeMaterials[5].map = createKeyboardFace(faceRight);
 
-    cubeMaterials.forEach(m => m.needsUpdate = true);
+    cubeMaterials.forEach(m => {
+        m.map.needsUpdate = true;
+        m.needsUpdate = true;
+    });
 
     if (rightFaceMesh) {
         rightFaceMesh.material.map = createKeyboardFace(faceRight);
-        rightFaceMesh.material.needsUpdate = true;
+        rightFaceMesh.material.map.needsUpdate = true;
     }
 
     if (backFaceMesh) {
         backFaceMesh.material.map = createKeyboardFace(faceBack);
-        backFaceMesh.material.needsUpdate = true;
+        backFaceMesh.material.map.needsUpdate = true;
     }
 }
 
-// Cube Three.js 
+// Cube 
+
 function initCube() {
     const container = document.getElementById("cube-container");
     const scene = new THREE.Scene();
-    const aspect = container.clientWidth / container.clientHeight;
-    const d = 4;
 
-    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 1000);
+    const camera = new THREE.OrthographicCamera(-6, 6, 6, -6, 0.1, 1000);
     camera.position.set(6, 6, 6);
     camera.lookAt(0, 0, 0);
 
@@ -247,13 +243,6 @@ function initCube() {
     container.appendChild(renderer.domElement);
 
     scene.add(new THREE.AmbientLight(0xffffff, 1));
-
-    const faceFront = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
-    const faceBack = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
-    const faceRight = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
-    const faceLeft = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
-    const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
-    const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
     cubeMaterials = [
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),
