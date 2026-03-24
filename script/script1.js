@@ -215,7 +215,7 @@ function initCube() {
     const scene = new THREE.Scene();
 
     const camera = new THREE.OrthographicCamera(-1,1,1,-1,0.1,1000);
-    camera.position.set(6, 6, 6);
+    camera.position.set(-6, 6, 6);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
