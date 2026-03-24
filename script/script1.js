@@ -1,12 +1,10 @@
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 
 // Configuration 
-
 const TOTAL_EXERCISES_SESSION = 11;
 const SESSION_DURATION = 2100;
 
 // Exercices 
-
 const exercises = [
     { name: "FJ", text: "jjjj ffff jjff jj ffjj ff j f ffjf fj fffjj ffjjjjf ffjjff jffjfjfj ffjjfj fjjf ffjjffj" },
     { name: "GH", text: "gggg hhhh gghh ghgh g h ghgjf hjjh ffjhjggh hfhjfg gh ffjjhgjgfg hhggh ghjfjgjg hfggfjj" },
@@ -15,18 +13,17 @@ const exercises = [
 ];
 
 // État 
-
 let currentExerciseIndex = 0;
 let currentIndex = 0;
 let spans = [];
 let currentTargetKey = null;
 
-// 🆕 cube refs
+// Cube refs
 let cubeMaterials = [];
 let rightFaceMesh = null;
 let backFaceMesh = null;
 
-// 🆕 layouts globaux
+// Layouts globaux
 const faceFront = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
 const faceBack = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
 const faceRight = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
@@ -40,13 +37,11 @@ let keyTimestamps = [];
 let typedChars = [];          
 let errorCount = 0;
 
-// Utilisateur 
-
+// User
 const username = localStorage.getItem("username");
 document.getElementById("usernameDisplay").textContent = username || "Invité";
 
-// Timer 
-
+// Timer
 let seconds = parseInt(localStorage.getItem("globalTime")) || 0;
 updateTimerDisplay();
 
@@ -64,8 +59,7 @@ function updateTimerDisplay() {
         String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
 }
 
-// Progression 
-
+// Progression
 function updateGlobalProgress() {
     const completed = parseInt(localStorage.getItem("completedExercises")) || 0;
     const percent = Math.floor((completed / TOTAL_EXERCISES_SESSION) * 100);
@@ -73,8 +67,7 @@ function updateGlobalProgress() {
     document.getElementById("progressPercent").textContent = percent + "%";
 }
 
-// Curseur 
-
+// Curseur
 function updateCursor() {
     const cursor = document.getElementById("cursor");
     if (!cursor || currentIndex >= spans.length) return;
@@ -86,8 +79,7 @@ function updateCursor() {
     cursor.style.top = (rect.top - containerRect.top) + "px";
 }
 
-// Chargement exercice 
-
+// Load exercice
 function loadExercise(index) {
     const textDisplay = document.getElementById("textDisplay");
     textDisplay.innerHTML = "";
@@ -112,15 +104,13 @@ function loadExercise(index) {
     cursor.id = "cursor";
     textDisplay.appendChild(cursor);
 
-    //  curseur + highlight timing
     setTimeout(() => {
         updateCursor();
         updateCurrentTargetKey();
     }, 50);
 }
 
-//  touche cible
-
+// Target key
 function updateCurrentTargetKey() {
     if (currentIndex < spans.length) {
         currentTargetKey = spans[currentIndex].textContent.toUpperCase();
@@ -130,8 +120,7 @@ function updateCurrentTargetKey() {
     updateCubeTextures();
 }
 
-// Gestion frappe 
-
+// Input
 document.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") e.preventDefault();
     if (!spans.length || currentIndex >= spans.length || e.key.length > 1) return;
@@ -149,9 +138,9 @@ document.addEventListener("keydown", (e) => {
         keyTimestamps.push(now);
         currentIndex++;
 
-        updateCurrentTargetKey(); 
-
+        updateCurrentTargetKey();
         updateCursor();
+
         if (currentIndex === spans.length) finishExercise();
     } else {
         errorCount++;
@@ -159,8 +148,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// texture avec highlight
-
+// Texture
 function createKeyboardFace(layout) {
     const canvas = document.createElement("canvas");
     canvas.width = 512; 
@@ -181,11 +169,9 @@ function createKeyboardFace(layout) {
             const x = padding + c * (keyWidth + gap);
             const y = padding + r * (keyHeight + gap);
 
-            if (letter && letter.toUpperCase() === currentTargetKey) {
-                ctx.fillStyle = "#ffcc00";
-            } else {
-                ctx.fillStyle = "#e0e0e0";
-            }
+            ctx.fillStyle = (letter && letter.toUpperCase() === currentTargetKey)
+                ? "#ffcc00"
+                : "#e0e0e0";
 
             ctx.fillRect(x, y, keyWidth, keyHeight);
 
@@ -200,21 +186,16 @@ function createKeyboardFace(layout) {
     return new THREE.CanvasTexture(canvas);
 }
 
-// refresh textures
-
+// Update textures
 function updateCubeTextures() {
     if (!cubeMaterials.length) return;
 
-    cubeMaterials[0].map = createKeyboardFace(faceBack);
-    cubeMaterials[1].map = createKeyboardFace(faceFront);
-    cubeMaterials[2].map = createKeyboardFace(faceTop);
-    cubeMaterials[3].map = createKeyboardFace(faceBottom);
-    cubeMaterials[4].map = createKeyboardFace(faceLeft);
-    cubeMaterials[5].map = createKeyboardFace(faceRight);
+    const layouts = [faceBack, faceFront, faceTop, faceBottom, faceLeft, faceRight];
 
-    cubeMaterials.forEach(m => {
-        m.map.needsUpdate = true;
-        m.needsUpdate = true;
+    cubeMaterials.forEach((mat, i) => {
+        mat.map = createKeyboardFace(layouts[i]);
+        mat.map.needsUpdate = true;
+        mat.needsUpdate = true;
     });
 
     if (rightFaceMesh) {
@@ -228,21 +209,38 @@ function updateCubeTextures() {
     }
 }
 
-// Cube 
-
+// Cube
 function initCube() {
     const container = document.getElementById("cube-container");
     const scene = new THREE.Scene();
 
-    const aspect = container.clientWidth / container.clientHeight;
-    const d = 4;
-    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 1000);
-    camera.position.set(5, 5, 5);
+    const camera = new THREE.OrthographicCamera(-1,1,1,-1,0.1,1000);
+    camera.position.set(6, 6, 6);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
+
+    function resizeRenderer() {
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        renderer.setSize(width, height);
+
+        const aspect = width / height;
+        const d = 4;
+
+        camera.left = -d * aspect;
+        camera.right = d * aspect;
+        camera.top = d;
+        camera.bottom = -d;
+
+        camera.updateProjectionMatrix();
+    }
+
+    resizeRenderer();
+    window.addEventListener("resize", resizeRenderer);
 
     scene.add(new THREE.AmbientLight(0xffffff, 1));
 
@@ -272,12 +270,12 @@ function initCube() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
+
     animate();
 }
 
 initCube();
 
 // Init 
-
 updateGlobalProgress();
 loadExercise(currentExerciseIndex);
