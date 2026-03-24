@@ -234,8 +234,10 @@ function initCube() {
     const container = document.getElementById("cube-container");
     const scene = new THREE.Scene();
 
-    const camera = new THREE.OrthographicCamera(-6, 6, 6, -6, 0.1, 1000);
-    camera.position.set(6, 6, 6);
+    const aspect = container.clientWidth / container.clientHeight;
+    const d = 4;
+    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 1000);
+    camera.position.set(5, 5, 5);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
