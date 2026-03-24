@@ -14,17 +14,25 @@ const exercises = [
     { name: "SL", text: "ssss llll ssll slsl s l sllsthfj jjtylls lsslsjgh slfjhstl ytyghls tytlsssll gghhlsytls" }
 ];
 
-//  État 
+// État 
 
 let currentExerciseIndex = 0;
 let currentIndex = 0;
 let spans = [];
+
+// 🆕 touche actuelle à highlight
+let currentTargetKey = null;
 
 // Métriques par exercice
 let exerciseStartTime = null;
 let keyTimestamps = [];       
 let typedChars = [];          
 let errorCount = 0;
+
+// 🆕 références cube
+let cubeMaterials = [];
+let rightFaceMesh = null;
+let backFaceMesh = null;
 
 // Utilisateur 
 
@@ -70,7 +78,7 @@ function updateCursor() {
     cursor.style.top = (rect.top - containerRect.top) + "px";
 }
 
-//  Chargement exercice 
+// Chargement exercice 
 
 function loadExercise(index) {
     const textDisplay = document.getElementById("textDisplay");
@@ -79,7 +87,6 @@ function loadExercise(index) {
     const text = exercises[index].text;
     currentIndex = 0;
 
-    // Reset métriques
     exerciseStartTime = null;
     keyTimestamps = [];
     typedChars = [];
@@ -97,10 +104,23 @@ function loadExercise(index) {
     cursor.id = "cursor";
     textDisplay.appendChild(cursor);
 
+    // 🆕 init highlight
+    updateCurrentTargetKey();
+
     setTimeout(updateCursor, 50);
 }
 
-//  Distance de Levenshtein 
+// 🆕 MAJ touche attendue
+function updateCurrentTargetKey() {
+    if (currentIndex < spans.length) {
+        currentTargetKey = spans[currentIndex].textContent.toUpperCase();
+    } else {
+        currentTargetKey = null;
+    }
+    updateCubeTextures();
+}
+
+// Distance de Levenshtein 
 
 function levenshtein(a, b) {
     const m = a.length, n = b.length;
@@ -117,13 +137,12 @@ function levenshtein(a, b) {
     return dp[m][n];
 }
 
-//  Gestion frappe 
+// Gestion frappe 
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") e.preventDefault();
     if (!spans.length || currentIndex >= spans.length || e.key.length > 1) return;
 
-    // Démarre le chrono du premier caractère
     if (exerciseStartTime === null) exerciseStartTime = performance.now();
 
     const now = performance.now();
@@ -136,6 +155,10 @@ document.addEventListener("keydown", (e) => {
         spans[currentIndex].classList.add("correct");
         keyTimestamps.push(now);
         currentIndex++;
+
+        // 🆕 update highlight après bonne frappe
+        updateCurrentTargetKey();
+
         updateCursor();
         if (currentIndex === spans.length) finishExercise();
     } else {
@@ -144,77 +167,68 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// Calcul métriques 
+// 🆕 Création texture avec highlight
+function createKeyboardFace(layout) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512; canvas.height = 512;
+    const ctx = canvas.getContext("2d");
 
-function computeMetrics() {
-    const expectedText = exercises[currentExerciseIndex].text;
-    const typedText = typedChars.join("");
+    ctx.fillStyle = "#ffffff"; 
+    ctx.fillRect(0, 0, 512, 512);
 
-    // WPM : nb de caractères corrects / 5 / minutes écoulées
-    const elapsedMinutes = (performance.now() - exerciseStartTime) / 60000;
-    const wpm = elapsedMinutes > 0
-        ? Math.round((currentIndex / 5) / elapsedMinutes)
-        : 0;
+    const rows = layout.length, cols = layout[0].length;
+    const padding = 40, gap = 15;
+    const keyWidth = (512 - padding * 2 - gap * (cols - 1)) / cols;
+    const keyHeight = (512 - padding * 2 - gap * (rows - 1)) / rows;
 
-    // Taux d'erreur Levenshtein
-    const dist = levenshtein(typedText, expectedText);
-    const errorRate = expectedText.length > 0
-        ? Math.round((dist / expectedText.length) * 100)
-        : 0;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            const letter = layout[r][c];
+            const x = padding + c * (keyWidth + gap);
+            const y = padding + r * (keyHeight + gap);
 
-    // Temps de réaction moyen entre frappes consécutives (ms)
-    let avgReactionTime = 0;
-    if (keyTimestamps.length > 1) {
-        const deltas = keyTimestamps.slice(1).map((t, i) => t - keyTimestamps[i]);
-        avgReactionTime = Math.round(deltas.reduce((a, b) => a + b, 0) / deltas.length);
+            // 🆕 highlight si correspond
+            if (letter.toUpperCase() === currentTargetKey) {
+                ctx.fillStyle = "#ffcc00"; // jaune/orange
+            } else {
+                ctx.fillStyle = "#e0e0e0";
+            }
+
+            ctx.fillRect(x, y, keyWidth, keyHeight);
+
+            ctx.fillStyle = "#000";
+            ctx.font = "bold 32px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(letter, x + keyWidth / 2, y + keyHeight / 2);
+        }
     }
 
-    return { wpm, errorRate, avgReactionTime, typed: typedText, expected: expectedText };
+    return new THREE.CanvasTexture(canvas);
 }
 
-// Fin exercice 
+// 🆕 refresh textures
+function updateCubeTextures() {
+    if (!cubeMaterials.length) return;
 
-async function finishExercise() {
-    const exId = "ex" + (currentExerciseIndex + 1);
-    const exElement = document.getElementById(exId);
-    if (exElement) exElement.classList.add("done");
+    cubeMaterials[0].map = createKeyboardFace(faceBack);
+    cubeMaterials[1].map = createKeyboardFace(faceFront);
+    cubeMaterials[2].map = createKeyboardFace(faceTop);
+    cubeMaterials[3].map = createKeyboardFace(faceBottom);
+    cubeMaterials[4].map = createKeyboardFace(faceLeft);
+    cubeMaterials[5].map = createKeyboardFace(faceRight);
 
-    // Sauvegarder métriques dans sessionStorage
-    const metrics = computeMetrics();
-    const order = parseInt(localStorage.getItem("exerciseOrder") || "0");
-    localStorage.setItem("exerciseOrder", order + 1);
+    cubeMaterials.forEach(m => m.needsUpdate = true);
 
-    const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]");
-    stats.push({
-        part: 1,
-        order,
-        exerciseName: exercises[currentExerciseIndex].name,
-        wpm: metrics.wpm,
-        errorRate: metrics.errorRate,
-        avgReactionTime: metrics.avgReactionTime
-    });
-    sessionStorage.setItem("sessionStats", JSON.stringify(stats));
-
-    let completed = parseInt(localStorage.getItem("completedExercises")) || 0;
-    completed++;
-    localStorage.setItem("completedExercises", completed);
-    updateGlobalProgress();
-
-    currentExerciseIndex++;
-
-    if (currentExerciseIndex < exercises.length) {
-        setTimeout(() => loadExercise(currentExerciseIndex), 800);
-    } else {
-        setTimeout(() => { window.location.href = "code/part2.html"; }, 1000);
+    if (rightFaceMesh) {
+        rightFaceMesh.material.map = createKeyboardFace(faceRight);
+        rightFaceMesh.material.needsUpdate = true;
     }
-}
 
-// Fin session 
-
-async function endSession() {
-    clearInterval(timerInterval);
-    sessionStorage.setItem("sessionTotalTime", seconds);
-    window.location.href = "code/resultat.html";
+    if (backFaceMesh) {
+        backFaceMesh.material.map = createKeyboardFace(faceBack);
+        backFaceMesh.material.needsUpdate = true;
+    }
 }
 
 // Cube Three.js 
@@ -223,49 +237,16 @@ function initCube() {
     const scene = new THREE.Scene();
     const aspect = container.clientWidth / container.clientHeight;
     const d = 4;
+
     const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 1000);
     camera.position.set(6, 6, 6);
     camera.lookAt(0, 0, 0);
+
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setClearColor(0x000000, 0);
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5);
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
-    function createKeyboardFace(layout) {
-        const canvas = document.createElement("canvas");
-        canvas.width = 512; canvas.height = 512;
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 512, 512);
-        const rows = layout.length, cols = layout[0].length;
-        const padding = 40, gap = 15;
-        const keyWidth = (512 - padding * 2 - gap * (cols - 1)) / cols;
-        const keyHeight = (512 - padding * 2 - gap * (rows - 1)) / rows;
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
-                const letter = layout[r][c];
-                const x = padding + c * (keyWidth + gap);
-                const y = padding + r * (keyHeight + gap);
-                ctx.shadowColor = "rgba(0,0,0,0.35)"; ctx.shadowBlur = 10;
-                ctx.shadowOffsetX = 6; ctx.shadowOffsetY = 6;
-                ctx.fillStyle = "#e0e0e0"; ctx.fillRect(x, y, keyWidth, keyHeight);
-                ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
-                ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 4;
-                ctx.beginPath(); ctx.moveTo(x, y + keyHeight); ctx.lineTo(x, y);
-                ctx.lineTo(x + keyWidth, y); ctx.stroke();
-                ctx.strokeStyle = "#777";
-                ctx.beginPath(); ctx.moveTo(x + keyWidth, y);
-                ctx.lineTo(x + keyWidth, y + keyHeight); ctx.lineTo(x, y + keyHeight); ctx.stroke();
-                ctx.fillStyle = "#000"; ctx.font = "bold 32px Arial";
-                ctx.textAlign = "center"; ctx.textBaseline = "middle";
-                ctx.fillText(letter, x + keyWidth / 2, y + keyHeight / 2);
-            }
-        }
-        return new THREE.CanvasTexture(canvas);
-    }
+    scene.add(new THREE.AmbientLight(0xffffff, 1));
 
     const faceFront = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
     const faceBack = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
@@ -274,37 +255,32 @@ function initCube() {
     const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
     const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
-   
-    const materials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),    
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),   
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),    
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),  
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),    
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })    
+    cubeMaterials = [
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })
     ];
 
-    const geometry = new THREE.BoxGeometry(4, 4, 4);
-    const cube = new THREE.Mesh(geometry, materials);
-    cube.rotation.x = 0.3;
-    cube.rotation.y = Math.PI / 3;
+    const cube = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), cubeMaterials);
     scene.add(cube);
 
-    const planeGeometry = new THREE.PlaneGeometry(4, 4);
+    const plane = new THREE.PlaneGeometry(4, 4);
 
-    // faceRight dédoublée
-    const rightFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
-    rightFace.position.set(6.5, 1, 0);
-    rightFace.rotation.y = 0;
-    scene.add(rightFace);
+    rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
+    rightFaceMesh.position.set(6.5, 1, 0);
+    scene.add(rightFaceMesh);
 
-    // faceBack ddédoublée
-    const backFace = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-    backFace.position.set(-6.5, 3, 0);
-    backFace.rotation.y = 0;
-    scene.add(backFace);
+    backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
+    backFaceMesh.position.set(-6.5, 3, 0);
+    scene.add(backFaceMesh);
 
-    function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
     animate();
 }
 
