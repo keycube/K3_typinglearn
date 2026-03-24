@@ -112,14 +112,14 @@ function loadExercise(index) {
     cursor.id = "cursor";
     textDisplay.appendChild(cursor);
 
-    // 🔥 FIX curseur + highlight timing
+    //  curseur + highlight timing
     setTimeout(() => {
         updateCursor();
         updateCurrentTargetKey();
     }, 50);
 }
 
-// 🆕 touche cible
+//  touche cible
 
 function updateCurrentTargetKey() {
     if (currentIndex < spans.length) {
@@ -149,7 +149,7 @@ document.addEventListener("keydown", (e) => {
         keyTimestamps.push(now);
         currentIndex++;
 
-        updateCurrentTargetKey(); // 🔥 update highlight
+        updateCurrentTargetKey(); 
 
         updateCursor();
         if (currentIndex === spans.length) finishExercise();
@@ -159,7 +159,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// 🆕 texture avec highlight
+// texture avec highlight
 
 function createKeyboardFace(layout) {
     const canvas = document.createElement("canvas");
@@ -200,7 +200,7 @@ function createKeyboardFace(layout) {
     return new THREE.CanvasTexture(canvas);
 }
 
-// 🆕 refresh textures
+// refresh textures
 
 function updateCubeTextures() {
     if (!cubeMaterials.length) return;
