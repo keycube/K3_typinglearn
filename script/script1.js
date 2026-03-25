@@ -80,11 +80,21 @@ function finishExercise() {
     currentExerciseIndex++;
 
     if (currentExerciseIndex < exercises.length) {
+
         loadExercise(currentExerciseIndex);
     } else {
-        endSession();
-        window.location.href = "code/part2.html";
+
+        console.log("Partie finie");
         
+        endSession(); 
+
+        window.location.href = "code/part2.html";
+
+        setTimeout(() => {
+            if (window.location.pathname.indexOf("part2.html") === -1) {
+                window.location.href = "part2.html";
+            }
+        }, 500);
     }
 }
 
