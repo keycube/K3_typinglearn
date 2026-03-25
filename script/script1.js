@@ -142,7 +142,9 @@ document.addEventListener("keydown", (e) => {
         updateCurrentTargetKey();
         updateCursor();
 
-        if (currentIndex === spans.length) finishExercise();
+        if (currentIndex === spans.length) {
+            setTimeout(() => finishExercise(), 0);
+        }
     } else {
         errorCount++;
         spans[currentIndex].classList.add("incorrect");
