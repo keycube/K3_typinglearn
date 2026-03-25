@@ -155,7 +155,7 @@ function createKeyboardFace(layout) {
     canvas.height = 512;
     const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = "#d0d0d0";
+    ctx.fillStyle = "#999999";
     ctx.fillRect(0, 0, 512, 512);
 
     const rows = layout.length, cols = layout[0].length;
@@ -272,7 +272,10 @@ function initCube() {
     resizeRenderer();
     window.addEventListener("resize", resizeRenderer);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 1));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    dirLight.position.set(5, 8, 6);
+    scene.add(dirLight);
 
     cubeMaterials = [
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),
