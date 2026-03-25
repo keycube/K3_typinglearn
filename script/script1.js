@@ -123,7 +123,8 @@ function updateCurrentTargetKey() {
 // Input
 document.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") e.preventDefault();
-    if (!spans.length || currentIndex >= spans.length || e.key.length > 1) return;
+    if (!spans.length || currentIndex >= spans.length) return;
+    if (e.key.length > 1 && e.key !== " ") return;
 
     if (exerciseStartTime === null) exerciseStartTime = performance.now();
 
