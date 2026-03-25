@@ -155,7 +155,7 @@ function createKeyboardFace(layout) {
     canvas.height = 512;
     const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#d0d0d0";
     ctx.fillRect(0, 0, 512, 512);
 
     const rows = layout.length, cols = layout[0].length;
@@ -168,15 +168,45 @@ function createKeyboardFace(layout) {
             const letter = layout[r][c];
             const x = padding + c * (keyWidth + gap);
             const y = padding + r * (keyHeight + gap);
+            const isTarget = letter && letter.toUpperCase() === currentTargetKey;
 
-            ctx.fillStyle = (letter && letter.toUpperCase() === currentTargetKey)
-                ? "#ffcc00"
-                : "#e0e0e0";
+            // Ombre portée (relief)
+            ctx.shadowColor = "rgba(0,0,0,0.45)";
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 5;
 
-            ctx.fillRect(x, y, keyWidth, keyHeight);
+            // Corps de la touche
+            ctx.fillStyle = isTarget ? "#ffcc00" : "#f5f5f5";
+            ctx.beginPath();
+            ctx.roundRect(x, y, keyWidth, keyHeight, 6);
+            ctx.fill();
 
-            ctx.fillStyle = "#000";
-            ctx.font = "bold 32px Arial";
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // Bord haut + gauche (clair = lumière)
+            ctx.strokeStyle = isTarget ? "#ffe066" : "#ffffff";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(x + 6, y + keyHeight);
+            ctx.lineTo(x + 6, y + 6);
+            ctx.lineTo(x + keyWidth, y + 6);
+            ctx.stroke();
+
+            // Bord bas + droite (sombre = ombre)
+            ctx.strokeStyle = isTarget ? "#c8960a" : "#aaaaaa";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(x + keyWidth - 2, y + 6);
+            ctx.lineTo(x + keyWidth - 2, y + keyHeight - 2);
+            ctx.lineTo(x + 6, y + keyHeight - 2);
+            ctx.stroke();
+
+            // Lettre
+            ctx.fillStyle = isTarget ? "#333" : "#222";
+            ctx.font = `bold ${isTarget ? 34 : 30}px Arial`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(letter, x + keyWidth / 2, y + keyHeight / 2);
