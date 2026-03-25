@@ -82,8 +82,9 @@ function finishExercise() {
     if (currentExerciseIndex < exercises.length) {
         loadExercise(currentExerciseIndex);
     } else {
-        //alert("Fin exercice");
         endSession();
+        window.location.href = "code/part2.html";
+        
     }
 }
 
