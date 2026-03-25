@@ -67,6 +67,32 @@ function updateGlobalProgress() {
     document.getElementById("progressPercent").textContent = percent + "%";
 }
 
+
+
+function finishExercise() {
+    // Mise à jour de la progression
+    let completed = parseInt(localStorage.getItem("completedExercises")) || 0;
+    completed++;
+    localStorage.setItem("completedExercises", completed);
+    updateGlobalProgress();
+
+    // Incrément de l'index d'exercice
+    currentExerciseIndex++;
+
+    if (currentExerciseIndex < exercises.length) {
+        loadExercise(currentExerciseIndex);
+    } else {
+        //alert("Fin exercice");
+        endSession();
+    }
+}
+
+function endSession() {
+    clearInterval(timerInterval);
+}
+
+
+
 // Curseur
 function updateCursor() {
     const cursor = document.getElementById("cursor");
@@ -143,39 +169,14 @@ document.addEventListener("keydown", (e) => {
         updateCursor();
 
         if (currentIndex === spans.length) {
-            setTimeout(() => finishExercise(), 0);
+           
+            finishExercise();
         }
     } else {
         errorCount++;
         spans[currentIndex].classList.add("incorrect");
     }
 });
-
-
-function finishExercise() {
-    // Mise à jour de la progression globale
-    let completed = parseInt(localStorage.getItem("completedExercises")) || 0;
-    completed++;
-    localStorage.setItem("completedExercises", completed);
-    updateGlobalProgress();
-
-    // Passage à l'index suivant
-    currentExerciseIndex++;
-
-    if (currentExerciseIndex < exercises.length) {
-        loadExercise(currentExerciseIndex);
-    } else {
-        alert("Bravo ! Vous avez terminé tous les exercices disponibles.");
-        
-    }
-}
-
-function endSession() {
-    clearInterval(timerInterval);
-    alert("Temps écoulé ! Session terminée.");
-}
-
-
 
 // Texture
 function createKeyboardFace(layout) {
@@ -199,11 +200,13 @@ function createKeyboardFace(layout) {
             const y = padding + r * (keyHeight + gap);
             const isTarget = letter && letter.toUpperCase() === currentTargetKey;
 
+            // Ombre portée (relief)
             ctx.shadowColor = "rgba(0,0,0,0.45)";
             ctx.shadowBlur = 8;
             ctx.shadowOffsetX = 4;
             ctx.shadowOffsetY = 5;
 
+            // Corps de la touche
             ctx.fillStyle = isTarget ? "#ffcc00" : "#ffffff";
             ctx.beginPath();
             ctx.roundRect(x, y, keyWidth, keyHeight, 6);
@@ -213,6 +216,7 @@ function createKeyboardFace(layout) {
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
 
+            // Bord haut
             ctx.strokeStyle = isTarget ? "#ffe066" : "#ffffff";
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -221,6 +225,7 @@ function createKeyboardFace(layout) {
             ctx.lineTo(x + keyWidth, y + 6);
             ctx.stroke();
 
+            // Bord bas 
             ctx.strokeStyle = isTarget ? "#c8960a" : "#aaaaaa";
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -229,6 +234,7 @@ function createKeyboardFace(layout) {
             ctx.lineTo(x + 6, y + keyHeight - 2);
             ctx.stroke();
 
+            // Lettre
             ctx.fillStyle = isTarget ? "#333" : "#222";
             ctx.font = `bold ${isTarget ? 34 : 30}px Arial`;
             ctx.textAlign = "center";
@@ -240,6 +246,7 @@ function createKeyboardFace(layout) {
     return new THREE.CanvasTexture(canvas);
 }
 
+// Update textures
 function updateCubeTextures() {
     if (!cubeMaterials.length) return;
 
@@ -262,6 +269,7 @@ function updateCubeTextures() {
     }
 }
 
+// Cube
 function initCube() {
     const container = document.getElementById("cube-container");
     const scene = new THREE.Scene();
@@ -277,13 +285,17 @@ function initCube() {
     function resizeRenderer() {
         const width = container.clientWidth;
         const height = container.clientHeight;
+
         renderer.setSize(width, height);
+
         const aspect = width / height;
         const d = 4;
+
         camera.left = -d * aspect;
         camera.right = d * aspect;
         camera.top = d;
         camera.bottom = -d;
+
         camera.updateProjectionMatrix();
     }
 
@@ -308,6 +320,7 @@ function initCube() {
     scene.add(cube);
 
     const plane = new THREE.PlaneGeometry(4, 4);
+
     rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
     rightFaceMesh.position.set(7.5, -3.5, 0);
     scene.add(rightFaceMesh);
@@ -320,6 +333,7 @@ function initCube() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
+
     animate();
 }
 
