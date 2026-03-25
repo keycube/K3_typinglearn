@@ -177,7 +177,7 @@ function createKeyboardFace(layout) {
             ctx.shadowOffsetY = 5;
 
             // Corps de la touche
-            ctx.fillStyle = isTarget ? "#ffcc00" : "#f5f5f5";
+            ctx.fillStyle = isTarget ? "#ffcc00" : "#ffffff";
             ctx.beginPath();
             ctx.roundRect(x, y, keyWidth, keyHeight, 6);
             ctx.fill();
@@ -186,7 +186,7 @@ function createKeyboardFace(layout) {
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
 
-            // Bord haut + gauche (clair = lumière)
+            // Bord haut
             ctx.strokeStyle = isTarget ? "#ffe066" : "#ffffff";
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -195,7 +195,7 @@ function createKeyboardFace(layout) {
             ctx.lineTo(x + keyWidth, y + 6);
             ctx.stroke();
 
-            // Bord bas + droite (sombre = ombre)
+            // Bord bas 
             ctx.strokeStyle = isTarget ? "#c8960a" : "#aaaaaa";
             ctx.lineWidth = 3;
             ctx.beginPath();
