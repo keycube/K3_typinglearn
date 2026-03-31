@@ -321,12 +321,12 @@ function initCube() {
     scene.add(dirLight);
 
     cubeMaterials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.5, side: THREE.DoubleSide })
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
     ];
 
     const cube = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), cubeMaterials);
