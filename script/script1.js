@@ -197,7 +197,8 @@ function createKeyboardFace(layout) {
     canvas.height = 512;
     const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = "#999999";
+    ctx.clearRect(0, 0, 512, 512);
+    ctx.fillStyle = "rgba(150,150,150,0.15)";
     ctx.fillRect(0, 0, 512, 512);
 
     const rows = layout.length, cols = layout[0].length;
@@ -219,7 +220,7 @@ function createKeyboardFace(layout) {
             ctx.shadowOffsetY = 5;
 
             // Corps de la touche
-            ctx.fillStyle = isTarget ? "#ffcc00" : "#ffffff";
+            ctx.fillStyle = isTarget ? "#ffcc00" : "rgba(255,255,255,0.5)";
             ctx.beginPath();
             ctx.roundRect(x, y, keyWidth, keyHeight, 6);
             ctx.fill();
@@ -320,26 +321,16 @@ function initCube() {
     scene.add(dirLight);
 
     cubeMaterials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.5, side: THREE.DoubleSide })
     ];
 
     const cube = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), cubeMaterials);
     scene.add(cube);
-
-    const plane = new THREE.PlaneGeometry(4, 4);
-
-    rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
-    rightFaceMesh.position.set(7.5, -2.5, 0);
-    scene.add(rightFaceMesh);
-
-    backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-    backFaceMesh.position.set(-7.5, 3.5, 0);
-    scene.add(backFaceMesh);
 
     function animate() {
         requestAnimationFrame(animate);
