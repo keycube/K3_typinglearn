@@ -4,7 +4,9 @@ const usernameInput = document.getElementById("username");
 // Nom utilisateur
 window.onload = function() {
     const savedName = localStorage.getItem("username");
+    localStorage.clear();
     if (savedName) {
+        localStorage.setItem("username", savedName);
         usernameInput.value = savedName;
     }
 };
