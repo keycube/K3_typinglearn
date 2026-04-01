@@ -1,26 +1,31 @@
-const startBtn = document.getElementById("startBtn");
-const usernameInput = document.getElementById("username");
+// Vider localStorage à chaque chargement 
+function clearLocalStorage() {
+  localStorage.clear();
+  const usernameInput = document.getElementById("username");
+  if (usernameInput) usernameInput.value = "";
+}
 
-// Nom utilisateur
-window.onload = function() {
-    const savedName = localStorage.getItem("username");
-    localStorage.clear();
-    if (savedName) {
-        localStorage.setItem("username", savedName);
-        usernameInput.value = savedName;
-    }
-};
+window.addEventListener("load", clearLocalStorage);
+window.addEventListener("pageshow", clearLocalStorage);
 
-// Bouton de début de session
-document.getElementById("startBtn").addEventListener("click", function() {
+// Bouton
+document.addEventListener("DOMContentLoaded", function () {
+  const startBtn = document.getElementById("startBtn");
+  if (!startBtn) return;
+
+  startBtn.addEventListener("click", function () {
     const username = document.getElementById("username").value.trim();
 
     if (username === "") {
-        alert("Veuillez entrer un nom d'utilisateur");
-        return;
+      alert("Veuillez entrer un nom d'utilisateur");
+      return;
     }
 
-    localStorage.setItem("username", username);
-    localStorage.setItem("exerciseOrder", "0");
+    // Stockage pour la session
+    sessionStorage.setItem("username", username);
+    sessionStorage.setItem("exerciseOrder", "0");
+
+    // Redirection vers la page suivante
     window.location.href = "code/part1.html";
+  });
 });
