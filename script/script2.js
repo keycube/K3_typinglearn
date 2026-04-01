@@ -129,6 +129,7 @@ function levenshtein(a, b) {
 //  Gestion frappe 
 
 document.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace") e.preventDefault();
     if (e.key === "&") { finishExercise(); return; }
     if (!spans.length || currentIndex >= spans.length || e.key.length > 1) return;
 

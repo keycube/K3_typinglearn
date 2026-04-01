@@ -157,29 +157,35 @@ function updateCurrentTargetKey() {
     updateCubeTextures();
 }
 
-///  Gestion frappe 
-
+// Input
 document.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") e.preventDefault();
     if (e.key === "&") { finishExercise(); return; }
-    if (!spans.length || currentIndex >= spans.length || e.key.length > 1) return;
+    if (!spans.length || currentIndex >= spans.length) return;
+    if (e.key.length > 1 && e.key !== " ") return;
 
     if (exerciseStartTime === null) exerciseStartTime = performance.now();
 
     const now = performance.now();
     const expected = spans[currentIndex].textContent;
 
-    allTypedChars.push(e.key);
-    allExpectedChars.push(expected);
+    typedChars.push(e.key);
 
     if (e.key === expected) {
         spans[currentIndex].classList.remove("incorrect");
         spans[currentIndex].classList.add("correct");
-        allKeyTimestamps.push(now);
+        keyTimestamps.push(now);
         currentIndex++;
+
+        updateCurrentTargetKey();
         updateCursor();
-        if (currentIndex === spans.length) nextWord();
+
+        if (currentIndex === spans.length) {
+           
+            finishExercise();
+        }
     } else {
+        errorCount++;
         spans[currentIndex].classList.add("incorrect");
     }
 });
