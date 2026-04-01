@@ -200,8 +200,9 @@ async function finishExercise() {
     if (el) el.classList.add("done");
 
     const metrics = computeMetrics();
-    const order = parseInt(localStorage.getItem("exerciseOrder") || "0");
-    localStorage.setItem("exerciseOrder", order + 1);
+    let order = parseInt(localStorage.getItem("exerciseOrder") || "0");
+    order++;
+    localStorage.setItem("exerciseOrder", order);
 
     const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]");
     stats.push({

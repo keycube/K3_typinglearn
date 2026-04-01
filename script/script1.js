@@ -1,5 +1,11 @@
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 
+// remise à 0 de la session
+sessionStorage.removeItem("sessionStats");
+localStorage.setItem("exerciseOrder", 0);
+localStorage.setItem("completedExercises", 0);
+localStorage.setItem("globalTime", 0);
+
 // Configuration 
 const TOTAL_EXERCISES_SESSION = 11;
 const SESSION_DURATION = 2100;
@@ -37,6 +43,52 @@ let keyTimestamps = [];
 let typedChars = [];          
 let errorCount = 0;
 
+//  Distance de Levenshtein 
+
+function levenshtein(a, b) {
+    const m = a.length, n = b.length;
+    const dp = Array.from({ length: m + 1 }, (_, i) =>
+        Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+    );
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            dp[i][j] = a[i - 1] === b[j - 1]
+                ? dp[i - 1][j - 1]
+                : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+        }
+    }
+    return dp[m][n];
+}
+
+//  Calcul métriques
+
+function computeMetrics() {
+    const typedText = allTypedChars.join("");
+    const expectedText = allExpectedChars.join("");
+
+    const elapsedMinutes = exerciseStartTime
+        ? (performance.now() - exerciseStartTime) / 60000
+        : 1;
+
+    const totalCorrect = allKeyTimestamps.length;
+    const wpm = elapsedMinutes > 0
+        ? Math.round((totalCorrect / 5) / elapsedMinutes)
+        : 0;
+
+    const dist = levenshtein(typedText, expectedText);
+    const errorRate = expectedText.length > 0
+        ? Math.round((dist / expectedText.length) * 100)
+        : 0;
+
+    let avgReactionTime = 0;
+    if (allKeyTimestamps.length > 1) {
+        const deltas = allKeyTimestamps.slice(1).map((t, i) => t - allKeyTimestamps[i]);
+        avgReactionTime = Math.round(deltas.reduce((a, b) => a + b, 0) / deltas.length);
+    }
+
+    return { wpm, errorRate, avgReactionTime, typed: typedText, expected: expectedText };
+}
+
 // User
 const username = localStorage.getItem("username");
 document.getElementById("usernameDisplay").textContent = username || "Invité";
@@ -69,32 +121,47 @@ function updateGlobalProgress() {
 
 
 
-function finishExercise() {
-    // Mise à jour de la progression
+// Fin exercice
+
+async function finishExercise() {
+    const exId = "ex" + (currentExerciseIndex + 1);
+    const el = document.getElementById(exId);
+    if (el) el.classList.add("done");
+
+    const metrics = computeMetrics();
+    let order = parseInt(localStorage.getItem("exerciseOrder") || "0");
+    order++;
+    localStorage.setItem("exerciseOrder", order);
+
+    const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]");
+    stats.push({
+        part: 2,
+        order,
+        exerciseName: exercises[currentExerciseIndex].name,
+        wpm: metrics.wpm,
+        errorRate: metrics.errorRate,
+        avgReactionTime: metrics.avgReactionTime
+    });
+    sessionStorage.setItem("sessionStats", JSON.stringify(stats));
+
     let completed = parseInt(localStorage.getItem("completedExercises")) || 0;
     completed++;
     localStorage.setItem("completedExercises", completed);
     updateGlobalProgress();
 
-    // Incrément de l'index d'exercice
+    // Reset accumulation pour prochain exercice
+    exerciseStartTime = null;
+    allKeyTimestamps = [];
+    allTypedChars = [];
+    allExpectedChars = [];
+
     currentExerciseIndex++;
+    currentWordIndex = 0;
 
     if (currentExerciseIndex < exercises.length) {
-
-        loadExercise(currentExerciseIndex);
+        setTimeout(loadWord, 800);
     } else {
-
-        console.log("Partie finie");
-        
-        endSession(); 
-
-        window.location.href = "code/part2.html";
-
-        setTimeout(() => {
-            if (window.location.pathname.indexOf("part2.html") === -1) {
-                window.location.href = "part2.html";
-            }
-        }, 500);
+        setTimeout(() => { window.location.href = "code/part2.html"; }, 1000);
     }
 }
 
@@ -156,6 +223,8 @@ function updateCurrentTargetKey() {
     }
     updateCubeTextures();
 }
+
+
 
 // Input
 document.addEventListener("keydown", (e) => {
@@ -341,6 +410,8 @@ function initCube() {
 }
 
 initCube();
+
+
 
 // Init 
 updateGlobalProgress();
