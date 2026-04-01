@@ -58,7 +58,7 @@ async function loadResults() {
         return 'error-bad';
     }
 
-    // ── TABLE (SANS HTML 🔥) ──
+    
     const grid = document.getElementById("exercisesGrid");
     const template = document.getElementById("exerciseTemplate");
 
@@ -135,7 +135,7 @@ async function loadResults() {
                 stats
             });
 
-            btn.textContent = '✓ Exporté';
+            btn.textContent = 'Exporté';
         } catch (err) {
             console.error(err);
             btn.textContent = 'Erreur';
