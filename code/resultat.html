@@ -4,24 +4,104 @@
     <meta charset="UTF-8">
     <title>Résultats - K3 Typing</title>
     <base href="/K3_typinglearn/">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style/resultat.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="page">
-        <div id="content">
-            <div class="loading">Chargement des résultats…</div>
+
+        <div class="header">
+            <h1>Session terminée</h1>
+            <div class="header-info">
+                <span id="username"></span>
+                <span id="time"></span>
+                <span id="date"></span>
+            </div>
         </div>
+
+        <div class="kpis">
+            <div class="kpi-card wpm">
+                <div class="kpi-label">Vitesse moyenne</div>
+                <div class="kpi-value" id="avgWpm"></div>
+                <div class="kpi-unit">mots / minute</div>
+            </div>
+
+            <div class="kpi-card error">
+                <div class="kpi-label">Taux d'erreur moyen</div>
+                <div class="kpi-value" id="avgError"></div>
+                <div class="kpi-unit">% (Levenshtein)</div>
+            </div>
+
+            <div class="kpi-card reaction">
+                <div class="kpi-label">Temps de réaction moyen</div>
+                <div class="kpi-value" id="avgReact"></div>
+                <div class="kpi-unit">ms entre frappes</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="section">
+                <div class="section-title">WPM par exercice</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartWpm"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Taux d'erreur par exercice</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartError"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Temps de réaction par exercice</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartReact"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Détail des exercices</div>
+            <div class="exercises-grid" id="exercisesGrid"></div>
+        </div>
+
+        <template id="exerciseTemplate">
+            <div class="exercise-row">
+                <div class="exercise-info">
+                    <div class="exercise-part"></div>
+                    <div class="exercise-name">
+                        <span class="name"></span>
+                        <span class="part-badge"></span>
+                    </div>
+                </div>
+
+                <div class="ex-metric">
+                    <div class="ex-metric-label">WPM</div>
+                    <div class="ex-metric-value wpm"></div>
+                </div>
+
+                <div class="ex-metric">
+                    <div class="ex-metric-label">Erreurs</div>
+                    <div class="ex-metric-value error"></div>
+                </div>
+
+                <div class="ex-metric">
+                    <div class="ex-metric-label">Réaction</div>
+                    <div class="ex-metric-value react"></div>
+                </div>
+            </div>
+        </template>
+
+        <button id="btnExport" class="btn-export">
+            Exporter les résultats
+        </button>
+
     </div>
 
-    </script type="module" src="script/resultat.js"></script>
-</body>
-
     <script type="module" src="script/resultat.js"></script>
-
 </body>
 </html>
