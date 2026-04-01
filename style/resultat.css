@@ -133,6 +133,9 @@ body::before {
     font-size: clamp(28px, 3.5vw, 40px);
     font-weight: 700;
     line-height: 1;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
 }
 
 .kpi-card.wpm .kpi-value      { color: var(--accent); }
