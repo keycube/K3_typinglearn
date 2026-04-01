@@ -67,18 +67,11 @@ async function loadResults() {
         <div class="header">
             <h1>Session terminée</h1>
             <div class="header-info">
-                <div class="header-info-card">
-                    <div class="info-label">Utilisateur</div>
-                    <div class="info-value">${username}</div>
-                </div>
-                <div class="header-info-card">
-                    <div class="info-label">Durée totale</div>
-                    <div class="info-value">${timeStr}</div>
-                </div>
-                <div class="header-info-card">
-                    <div class="info-label">Date</div>
-                    <div class="info-value">${dateStr}</div>
-                </div>
+                <span>${username}</span>
+                <span>·</span>
+                <span>${timeStr}</span>
+                <span>·</span>
+                <span>${dateStr}</span>
             </div>
         </div>
 
