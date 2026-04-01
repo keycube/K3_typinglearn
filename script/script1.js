@@ -332,6 +332,11 @@ function initCube() {
     const cube = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), cubeMaterials);
     scene.add(cube);
 
+    // Contours du cube
+    const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(4, 4, 4));
+    const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x555555, linewidth: 2 }));
+    scene.add(edgeLines);
+
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
