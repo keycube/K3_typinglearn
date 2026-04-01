@@ -65,13 +65,20 @@ async function loadResults() {
 
     content.innerHTML = `
         <div class="header">
-            <div class="header-left">
-                <h1>Session <span>terminée</span></h1>
-                <div class="subtitle">Durée totale : ${timeStr}</div>
-            </div>
-            <div class="header-meta">
-                <div class="username">${username}</div>
-                <div class="date">${dateStr}</div>
+            <h1>Session terminée</h1>
+            <div class="header-info">
+                <div class="header-info-card">
+                    <div class="info-label">Utilisateur</div>
+                    <div class="info-value">${username}</div>
+                </div>
+                <div class="header-info-card">
+                    <div class="info-label">Durée totale</div>
+                    <div class="info-value">${timeStr}</div>
+                </div>
+                <div class="header-info-card">
+                    <div class="info-label">Date</div>
+                    <div class="info-value">${dateStr}</div>
+                </div>
             </div>
         </div>
 
@@ -182,7 +189,7 @@ async function loadResults() {
 
     makeChart('chartWpm',   wpmData,   'rgba(124,106,247,1)');
     makeChart('chartError', errorData, 'rgba(247,106,138,1)');
-    makeChart('chartReact', reactData, 'rgba(32,180,134,1)');
+    makeChart('chartReact', reactData, 'rgba(106,247,200,1)');
 }
 
 loadResults();
