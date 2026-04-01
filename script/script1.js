@@ -321,16 +321,21 @@ function initCube() {
     scene.add(dirLight);
 
     cubeMaterials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.5, side: THREE.DoubleSide })
     ];
 
     const cube = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), cubeMaterials);
     scene.add(cube);
+
+    // Contours du cube
+    const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(4, 4, 4));
+    const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x555555, linewidth: 2 }));
+    scene.add(edgeLines);
 
     function animate() {
         requestAnimationFrame(animate);
