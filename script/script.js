@@ -1,8 +1,6 @@
 // Vider localStorage à chaque chargement 
 function clearLocalStorage() {
   localStorage.clear();
-  const usernameInput = document.getElementById("username");
-  if (usernameInput) usernameInput.value = "";
 }
 
 window.addEventListener("load", clearLocalStorage);
@@ -11,21 +9,26 @@ window.addEventListener("pageshow", clearLocalStorage);
 // Bouton
 document.addEventListener("DOMContentLoaded", function () {
   const startBtn = document.getElementById("startBtn");
+  const usernameInput = document.getElementById("username");
   if (!startBtn) return;
 
+  // Pré-remplir le nom si déjà saisi (depuis sessionStorage)
+  const savedName = sessionStorage.getItem("username");
+  if (savedName && usernameInput) usernameInput.value = savedName;
+
   startBtn.addEventListener("click", function () {
-    const username = document.getElementById("username").value.trim();
+    const username = usernameInput.value.trim();
 
     if (username === "") {
       alert("Veuillez entrer un nom d'utilisateur");
       return;
     }
 
-    // Stockage pour la session
+    // Stocker dans les deux pour compatibilité
+    localStorage.setItem("username", username);
     sessionStorage.setItem("username", username);
-    sessionStorage.setItem("exerciseOrder", "0");
+    localStorage.setItem("exerciseOrder", "0");
 
-    // Redirection vers la page suivante
     window.location.href = "code/part1.html";
   });
 });
