@@ -6,7 +6,7 @@ async function loadResults() {
         .sort((a, b) => a.order - b.order);
 
     const totalTime = parseInt(sessionStorage.getItem("sessionTotalTime") || "0");
-    const username  = localStorage.getItem("username") || "Invité";
+    const username = sessionStorage.getItem("username") || localStorage.getItem("username");
     const date      = new Date();
 
     if (stats.length === 0) {

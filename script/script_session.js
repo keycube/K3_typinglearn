@@ -65,7 +65,7 @@ let cubeMaterials = [];
 
 // ─── Utilisateur ──────────────────────────────────────────────────────────────
 
-const username = localStorage.getItem("username");
+const username = sessionStorage.getItem("username") || localStorage.getItem("username");
 const usernameEl = document.getElementById("usernameDisplay");
 if (usernameEl) usernameEl.textContent = username || "Invité";
 
