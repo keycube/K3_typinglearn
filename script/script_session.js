@@ -105,12 +105,17 @@ function updateGlobalProgress() {
 function updateCursor() {
     const cursor = document.getElementById("cursor");
     if (!cursor || !spans.length) return;
-    // Reste sur le dernier caractère à la fin
-    const idx = Math.min(currentIndex, spans.length - 1);
-    const rect = spans[idx].getBoundingClientRect();
     const containerRect = document.getElementById("textDisplay").getBoundingClientRect();
-    cursor.style.left = (rect.left - containerRect.left) + "px";
-    cursor.style.top = (rect.top - containerRect.top) + "px";
+    if (currentIndex >= spans.length) {
+        // Placer le curseur après le dernier caractère
+        const lastRect = spans[spans.length - 1].getBoundingClientRect();
+        cursor.style.left = (lastRect.right - containerRect.left) + "px";
+        cursor.style.top = (lastRect.top - containerRect.top) + "px";
+    } else {
+        const rect = spans[currentIndex].getBoundingClientRect();
+        cursor.style.left = (rect.left - containerRect.left) + "px";
+        cursor.style.top = (rect.top - containerRect.top) + "px";
+    }
 }
 
 // ─── Chargement du contenu courant ────────────────────────────────────────────
@@ -395,6 +400,6 @@ function initCube() {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
-initCube();
+if (partNumber === 1) initCube();
 updateGlobalProgress();
 loadContent();
