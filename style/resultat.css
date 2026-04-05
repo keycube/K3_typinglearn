@@ -239,7 +239,7 @@ body::before {
 .ex-metric-value.error-good { color: #f76a8a; }
 .ex-metric-value.error-warn { color: #f76a8a; }
 .ex-metric-value.error-bad  { color: #f76a8a; }
-.ex-metric-value.react      { color: #20b486; }
+.ex-metric-value.react      { color: #3b82f6; }
 
 .part-badge {
     display: inline-block;

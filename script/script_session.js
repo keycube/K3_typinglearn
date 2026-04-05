@@ -59,13 +59,16 @@ let allKeyTimestamps = [];
 let allTypedChars = [];
 let allExpectedChars = [];
 
-// Cube (part1 uniquement)
+// Cube
 let currentTargetKey = null;
 let cubeMaterials = [];
+let cubeMode = localStorage.getItem("cubeMode") || "transparent";
+let rightFaceMesh = null;
+let backFaceMesh = null;
 
 // ─── Utilisateur ──────────────────────────────────────────────────────────────
 
-const username = sessionStorage.getItem("username") || localStorage.getItem("username");
+const username = localStorage.getItem("username");
 const usernameEl = document.getElementById("usernameDisplay");
 if (usernameEl) usernameEl.textContent = username || "Invité";
 
@@ -101,7 +104,12 @@ function updateGlobalProgress() {
 
 function updateCursor() {
     const cursor = document.getElementById("cursor");
-    if (!cursor || currentIndex >= spans.length) return;
+    if (!cursor) return;
+    if (currentIndex >= spans.length) {
+        cursor.style.display = "none";
+        return;
+    }
+    cursor.style.display = "";
     const rect = spans[currentIndex].getBoundingClientRect();
     const containerRect = document.getElementById("textDisplay").getBoundingClientRect();
     cursor.style.left = (rect.left - containerRect.left) + "px";
@@ -140,7 +148,7 @@ function loadContent() {
 
     setTimeout(() => {
         updateCursor();
-        if (partNumber === 1) updateCurrentTargetKey();
+        updateCurrentTargetKey();
     }, 50);
 }
 
@@ -200,7 +208,7 @@ document.addEventListener("keydown", (e) => {
         allKeyTimestamps.push(now);
         currentIndex++;
         updateCursor();
-        if (partNumber === 1) updateCurrentTargetKey();
+        updateCurrentTargetKey();
 
         if (currentIndex === spans.length) onContentComplete();
     } else {

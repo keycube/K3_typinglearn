@@ -118,7 +118,7 @@ async function loadResults() {
 
     makeChart('chartWpm',   wpmData,   'rgba(124,106,247,1)');
     makeChart('chartError', errorData, 'rgba(247,106,138,1)');
-    makeChart('chartReact', reactData, 'rgba(106,247,200,1)');
+    makeChart('chartReact', reactData, 'rgba(59,130,246,1)');
 
     // ── EXPORT ──
     document.getElementById('btnExport').addEventListener('click', async () => {
