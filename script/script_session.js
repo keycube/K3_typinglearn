@@ -105,6 +105,7 @@ function updateGlobalProgress() {
 function updateCursor() {
     const cursor = document.getElementById("cursor");
     if (!cursor || !spans.length) return;
+    // Reste sur le dernier caractère à la fin
     const idx = Math.min(currentIndex, spans.length - 1);
     const rect = spans[idx].getBoundingClientRect();
     const containerRect = document.getElementById("textDisplay").getBoundingClientRect();
@@ -383,7 +384,7 @@ function initCube() {
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
         new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
     ];
-    const cube = new THREE.Mesh(new THREE.BoxGeometry(4,4,4), []);
+    const cube = new THREE.Mesh(new THREE.BoxGeometry(4,4,4), cubeMaterials);
     scene.add(cube);
     const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(4,4,4));
     const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x555555, linewidth: 2 }));
@@ -394,6 +395,6 @@ function initCube() {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
-if (partNumber === 1) initCube();
+initCube();
 updateGlobalProgress();
 loadContent();
