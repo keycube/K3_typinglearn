@@ -400,6 +400,6 @@ function initCube() {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
-if (partNumber === 1) initCube();
+initCube();
 updateGlobalProgress();
 loadContent();
