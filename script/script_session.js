@@ -312,11 +312,15 @@ function updateCurrentTargetKey() {
     updateCubeTextures();
 }
 
-function createKeyboardFace(layout) {
+function createKeyboardFace(layout, mirror = false) {
     const canvas = document.createElement("canvas");
     canvas.width = 512; canvas.height = 512;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, 512, 512);
+    if (mirror) {
+        ctx.translate(512, 0);
+        ctx.scale(-1, 1);
+    }
     ctx.fillStyle = "rgba(150,150,150,0.15)";
     ctx.fillRect(0, 0, 512, 512);
     const rows = layout.length, cols = layout[0].length;
@@ -350,11 +354,22 @@ function createKeyboardFace(layout) {
 function updateCubeTextures() {
     if (!cubeMaterials.length) return;
     const layouts = [faceBack, faceFront, faceTop, faceBottom, faceLeft, faceRight];
+    const mirrors = cubeMode === "transparent"
+        ? [true, false, false, false, false, true]
+        : [false, false, false, false, false, false];
     cubeMaterials.forEach((mat, i) => {
-        mat.map = createKeyboardFace(layouts[i]);
+        mat.map = createKeyboardFace(layouts[i], mirrors[i]);
         mat.map.needsUpdate = true;
         mat.needsUpdate = true;
     });
+    if (rightFaceMesh) {
+        rightFaceMesh.material.map = createKeyboardFace(faceRight);
+        rightFaceMesh.material.map.needsUpdate = true;
+    }
+    if (backFaceMesh) {
+        backFaceMesh.material.map = createKeyboardFace(faceBack);
+        backFaceMesh.material.map.needsUpdate = true;
+    }
 }
 
 function initCube() {
@@ -394,12 +409,12 @@ function initCube() {
 
         if (cubeMode === "transparent") {
             cubeMaterials = [
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack,   true),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront,  false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop,    false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom, false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft,   false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight,  true),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
             ];
         } else {
             cubeMaterials = [
@@ -411,12 +426,13 @@ function initCube() {
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })
             ];
             const plane = new THREE.PlaneGeometry(4, 4);
-            rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
-            rightFaceMesh.position.set(6.5, -1, 0);
-            scene.add(rightFaceMesh);
+            // Positions échangées : faceBack à droite, faceRight à gauche
             backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-            backFaceMesh.position.set(-7.5, 3.5, 0);
+            backFaceMesh.position.set(6.5, -1, 0);
             scene.add(backFaceMesh);
+            rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
+            rightFaceMesh.position.set(-7.5, 3.5, 0);
+            scene.add(rightFaceMesh);
         }
         cube.material = cubeMaterials;
     }
