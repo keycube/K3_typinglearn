@@ -400,6 +400,8 @@ function initCube() {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
-initCube();
-updateGlobalProgress();
-loadContent();
+document.addEventListener("DOMContentLoaded", () => {
+    initCube();
+    updateGlobalProgress();
+    loadContent();
+});
