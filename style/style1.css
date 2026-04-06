@@ -134,3 +134,21 @@ body {
     display: block;
 }
 
+#btnCubeMode {
+    width: auto;
+    padding: 6px 14px;
+    font-size: 13px;
+    background-color: #f7f9fc;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-family: Arial, sans-serif;
+}
+
+#btnCubeMode:hover {
+    background-color: #e2e8f0;
+    transform: none;
+}
+
