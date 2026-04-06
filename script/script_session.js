@@ -298,10 +298,10 @@ async function endSession() {
 
 // ─── Cube Three.js (part1 uniquement) ────────────────────────────────────────
 
-const faceFront  = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
-const faceBack   = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
-const faceRight  = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
-const faceLeft   = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
+const faceLeft  = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
+const faceRight   = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
+const faceBack  = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
+const faceFront   = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
 const faceTop    = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
 const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
