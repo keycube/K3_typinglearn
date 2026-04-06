@@ -381,19 +381,61 @@ function initCube() {
     const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
     dirLight.position.set(5, 8, 6);
     scene.add(dirLight);
-    cubeMaterials = [
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-        new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
-    ];
-    const cube = new THREE.Mesh(new THREE.BoxGeometry(4,4,4), cubeMaterials);
+
+    const cube = new THREE.Mesh(new THREE.BoxGeometry(4,4,4), []);
     scene.add(cube);
     const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(4,4,4));
-    const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x555555, linewidth: 2 }));
-    scene.add(edgeLines);
+    scene.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x555555, linewidth: 2 })));
+
+    function applyMode() {
+        // Retirer les faces dépliées si elles existent
+        if (rightFaceMesh) { scene.remove(rightFaceMesh); rightFaceMesh = null; }
+        if (backFaceMesh)  { scene.remove(backFaceMesh);  backFaceMesh = null; }
+
+        if (cubeMode === "transparent") {
+            cubeMaterials = [
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop),    transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft),   transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
+            ];
+        } else {
+            cubeMaterials = [
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack) }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront) }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop) }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom) }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft) }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })
+            ];
+            const plane = new THREE.PlaneGeometry(4, 4);
+            rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
+            rightFaceMesh.position.set(6.5, -1, 0);
+            scene.add(rightFaceMesh);
+            backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
+            backFaceMesh.position.set(-7.5, 3.5, 0);
+            scene.add(backFaceMesh);
+        }
+        cube.material = cubeMaterials;
+    }
+
+    applyMode();
+
+    // Bouton toggle
+    const btn = document.getElementById("btnCubeMode");
+    if (btn) {
+        btn.textContent = cubeMode === "transparent" ? "Vue dépliée" : "Vue transparente";
+        btn.addEventListener("click", () => {
+            cubeMode = cubeMode === "transparent" ? "unfolded" : "transparent";
+            localStorage.setItem("cubeMode", cubeMode);
+            btn.textContent = cubeMode === "transparent" ? "Vue dépliée" : "Vue transparente";
+            applyMode();
+            updateCubeTextures();
+        });
+    }
+
     function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
     animate();
 }
