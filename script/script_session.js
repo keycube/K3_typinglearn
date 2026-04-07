@@ -410,10 +410,10 @@ function initCube() {
         if (cubeMode === "transparent") {
             cubeMaterials = [
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack,   true),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront,  false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront,  false), transparent: true, opacity: 0.15, side: THREE.DoubleSide, depthWrite: false }),
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop,    false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom, false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft,   false), transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft,   false), transparent: true, opacity: 0.15, side: THREE.DoubleSide, depthWrite: false }),
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight,  true),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
             ];
         } else {
@@ -428,7 +428,7 @@ function initCube() {
             const plane = new THREE.PlaneGeometry(4, 4);
             // Positions échangées : faceBack à droite, faceRight à gauche
             backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-            backFaceMesh.position.set(6.5, -1, 0);
+            backFaceMesh.position.set(6.5, -2.5, 0);
             scene.add(backFaceMesh);
             rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
             rightFaceMesh.position.set(-7.5, 3.5, 0);
