@@ -428,7 +428,7 @@ function initCube() {
             const plane = new THREE.PlaneGeometry(4, 4);
             // Positions échangées : faceBack à droite, faceRight à gauche
             backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-            backFaceMesh.position.set(6, -1, 0);
+            backFaceMesh.position.set(6, -2.5, 0);
             scene.add(backFaceMesh);
             rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
             rightFaceMesh.position.set(-7.5, 2.5, 0);
