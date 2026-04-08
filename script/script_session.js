@@ -427,7 +427,7 @@ function initCube() {
             const plane = new THREE.PlaneGeometry(4, 4);
             backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
             backFaceMesh.position.set(7, -2.5, 1);
-            backFaceMesh.rotation.z = -0.9;
+            backFaceMesh.rotation.z = -0.12;
             scene.add(backFaceMesh);
             rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
             rightFaceMesh.position.set(-7.5, 2.5, 0);
