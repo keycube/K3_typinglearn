@@ -411,7 +411,7 @@ function initCube() {
             cubeMaterials = [
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack,   true),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false }),
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceFront,  false), transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false }),
-                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop,    false), transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false }),
+                new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceTop,    false), transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }),
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBottom, false), transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false }),
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceLeft,   false), transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false }),
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight,  true),  transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
