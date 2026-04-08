@@ -40,7 +40,6 @@ const PARTS = {
 };
 
 // ─── Détection de la partie courante ─────────────────────────────────────────
-// part1.html, part2.html ou part3.html passent data-part="1/2/3" sur <body>
 
 const partNumber = parseInt(document.body.dataset.part) || 1;
 const part = PARTS[partNumber];
@@ -296,7 +295,7 @@ async function endSession() {
     window.location.href = "code/resultat.html";
 }
 
-// ─── Cube Three.js (part1 uniquement) ────────────────────────────────────────
+// ─── Cube Three.js ────────────────────────────────────────
 
 const faceLeft  = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
 const faceRight   = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
@@ -428,7 +427,7 @@ function initCube() {
             const plane = new THREE.PlaneGeometry(4, 4);
             // Positions échangées : faceBack à droite, faceRight à gauche
             backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
-            backFaceMesh.position.set(7, -2.5, 0);
+            backFaceMesh.position.set(7, -2.5, 1);
             scene.add(backFaceMesh);
             rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
             rightFaceMesh.position.set(-7.5, 2.5, 0);
@@ -439,7 +438,7 @@ function initCube() {
 
     applyMode();
 
-    // Bouton toggle
+    // Bouton mode cube
     const btn = document.getElementById("btnCubeMode");
     if (btn) {
         btn.textContent = cubeMode === "transparent" ? "Vue dépliée" : "Vue transparente";

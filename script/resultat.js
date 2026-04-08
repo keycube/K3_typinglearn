@@ -152,7 +152,7 @@ async function loadResults() {
         a.click();
         URL.revokeObjectURL(url);
 
-        btn.textContent = "✓ Téléchargé";
+        btn.textContent = "Téléchargé";
         setTimeout(() => { btn.textContent = "Exporter les résultats"; }, 2000);
     });
 }
