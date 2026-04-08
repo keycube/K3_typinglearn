@@ -16,7 +16,7 @@ const PARTS = {
             { name: "SL", text: "ssss llll ssll slsl s l sllsthfj jjtylls lsslsjgh slfjhstl ytyghls tytlsssll gghhlsytls" }
         ],
         nextPage: "code/part2.html",
-        mode: "letters" // chaque exercice = un texte complet
+        mode: "letters" 
     },
     2: {
         exercises: [
@@ -26,7 +26,7 @@ const PARTS = {
             { name: "9 lettres",   words: ["important","language","experience","business","community","everything","education"] }
         ],
         nextPage: "code/part3.html",
-        mode: "words" // chaque exercice = liste de mots
+        mode: "words" 
     },
     3: {
         exercises: [
@@ -35,11 +35,11 @@ const PARTS = {
             { name: "Longues",        sentences: ["She told me that everything would be fine if we stayed focused"] }
         ],
         nextPage: "code/resultat.html",
-        mode: "sentences" // chaque exercice = liste de phrases
+        mode: "sentences" 
     }
 };
 
-// ─── Détection de la partie courante ─────────────────────────────────────────
+// ─── Détection de la partie ─────────────────────────────────────────
 
 const partNumber = parseInt(document.body.dataset.part) || 1;
 const part = PARTS[partNumber];
@@ -48,7 +48,7 @@ const exercises = part.exercises;
 // ─── État ─────────────────────────────────────────────────────────────────────
 
 let currentExerciseIndex = 0;
-let currentSubIndex = 0; // index dans words[] ou sentences[]
+let currentSubIndex = 0; 
 let currentIndex = 0;
 let spans = [];
 
@@ -117,7 +117,7 @@ function updateCursor() {
     }
 }
 
-// ─── Chargement du contenu courant ────────────────────────────────────────────
+// ─── Chargement du contenu ────────────────────────────────────────────
 
 function loadContent() {
     const textDisplay = document.getElementById("textDisplay");
@@ -402,7 +402,7 @@ function initCube() {
     scene.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x555555, linewidth: 2 })));
 
     function applyMode() {
-        // Retirer les faces dépliées si elles existent
+        // Retirer les faces dépliées pour le cube transparent
         if (rightFaceMesh) { scene.remove(rightFaceMesh); rightFaceMesh = null; }
         if (backFaceMesh)  { scene.remove(backFaceMesh);  backFaceMesh = null; }
 
@@ -425,10 +425,9 @@ function initCube() {
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight) })
             ];
             const plane = new THREE.PlaneGeometry(4, 4);
-            // Positions échangées : faceBack à droite, faceRight à gauche
             backFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide }));
             backFaceMesh.position.set(7, -2.5, 1);
-            backFaceMesh.rotation.z = -0.12;
+            backFaceMesh.rotation.z = -0.13;
             scene.add(backFaceMesh);
             rightFaceMesh = new THREE.Mesh(plane, new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceRight), side: THREE.DoubleSide }));
             rightFaceMesh.position.set(-7.5, 2.5, 0);

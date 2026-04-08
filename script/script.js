@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const usernameInput = document.getElementById("username");
   if (!startBtn) return;
 
-  // Pré-remplir le nom si déjà saisi (depuis sessionStorage)
+  // Pré-remplir le nom
   const savedName = sessionStorage.getItem("username");
   if (savedName && usernameInput) usernameInput.value = savedName;
 
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Stocker dans les deux pour compatibilité
+    // Stocker dans les deux 
     localStorage.setItem("username", username);
     sessionStorage.setItem("username", username);
     localStorage.setItem("exerciseOrder", "0");
