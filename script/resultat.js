@@ -1,5 +1,3 @@
-import { exportSessionToDexie } from "./db.js";
-
 async function loadResults() {
 
     const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]")
@@ -120,27 +118,42 @@ async function loadResults() {
     makeChart('chartError', errorData, 'rgba(247,106,138,1)');
     makeChart('chartReact', reactData, 'rgba(59,130,246,1)');
 
-    // ── EXPORT ──
-    document.getElementById('btnExport').addEventListener('click', async () => {
+    // ── EXPORT CSV ──
+    document.getElementById('btnExport').addEventListener('click', () => {
         const btn = document.getElementById('btnExport');
 
-        btn.disabled = true;
-        btn.textContent = 'Exportation…';
+        // En-tête CSV
+        const headers = ["Partie", "Exercice", "WPM", "Taux erreur (%)", "Temps réaction (ms)"];
 
-        try {
-            await exportSessionToDexie({
-                username,
-                date,
-                totalTime,
-                stats
-            });
+        // Lignes
+        const rows = stats.map(e => [
+            `Partie ${e.part}`,
+            e.exerciseName,
+            e.wpm,
+            e.errorRate,
+            e.avgReactionTime
+        ]);
 
-            btn.textContent = 'Exporté';
-        } catch (err) {
-            console.error(err);
-            btn.textContent = 'Erreur';
-            btn.disabled = false;
-        }
+        // Résumé global
+        rows.push([]);
+        rows.push(["RÉSUMÉ", "", avgWpm, avgError, avgReact]);
+
+        // Construction CSV
+        const csvContent = [headers, ...rows]
+            .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+            .join("\n");
+
+        // Téléchargement
+        const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement("a");
+        a.href     = url;
+        a.download = `k3_session_${username}_${date.toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        btn.textContent = "✓ Téléchargé";
+        setTimeout(() => { btn.textContent = "Exporter les résultats"; }, 2000);
     });
 }
 
