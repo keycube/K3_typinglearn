@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Session</title><!-- Mis à jour dynamiquement par script_session.js -->
+    <base href="/K3_typinglearn/">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+
+    <!-- ── En-tête ──────────────────────────────────────── -->
+    <div class="header">
+
+        <!-- Titre de partie + pastilles d'exercices -->
+        <div class="section-exercice">
+            <div class="title" id="partTitle"></div>
+            <div class="exercises" id="exerciseList"></div>
+        </div>
+
+        <!-- Chronomètre -->
+        <div class="timer" id="timer">00:00</div>
+
+        <!-- Barre de progression -->
+        <div class="progress-container">
+            <div id="progressPercent">0%</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Nom de l'utilisateur connecté -->
+        <div class="username" id="usernameDisplay"></div>
+
+        <!-- Bascule affichage cube -->
+        <button id="btnCubeMode">Vue dépliée</button>
+
+    </div>
+
+    <!-- ── Cube 3D ────────────────────────────────────────── -->
+    <div id="cube-container"></div>
+
+    <!-- ── Zone de frappe ────────────────────────────────── -->
+    <div class="main">
+        <div class="text-display" id="textDisplay"></div>
+    </div>
+
+    <!-- ── Script principal ──────────────────────────────── -->
+    <script type="module" src="script/script_session.js"></script>
+
+</body>
+</html>

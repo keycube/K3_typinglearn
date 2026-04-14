@@ -10,6 +10,7 @@ const SESSION_DURATION = 2100;      // Durée maximale en secondes (35 minutes)
 
 const PARTS = {
     1: {
+        title: "Partie 1 - Lettres",
         exercises: [
             { name: "FJ", text: "jjjj ffff jjff jj ffjj ff j f ffjf fj fffjj ffjjjjf ffjjff jffjfjfj ffjjfj fjjf ffjjffj" },
             { name: "GH", text: "gggg hhhh gghh ghgh g h ghgjf hjjh ffjhjggh hfhjfg gh ffjjhgjgfg hhggh ghjfjgjg hfggfjj" },
@@ -20,6 +21,7 @@ const PARTS = {
         mode: "letters"
     },
     2: {
+        title: "Partie 2 - Mots",
         exercises: [
             { name: "3-4 lettres", words: ["the","for","you","can","have","all","not","time","year","work","life","love","make","take","give","know","look"] },
             { name: "5-6 lettres", words: ["again","great","think","world","place","right","point","under","group","small","people","little","number","school","second","family","system","follow"] },
@@ -30,6 +32,7 @@ const PARTS = {
         mode: "words"
     },
     3: {
+        title: "Partie 3 - Phrases",
         exercises: [
             { name: "Courtes",        sentences: ["They play"] },
             { name: "Intermédiaires", sentences: ["I need to finish this today"] },
@@ -40,12 +43,37 @@ const PARTS = {
     }
 };
 
-// ─── Détection de la partie ─────────────────────────────────────────
-// Le numéro de partie est lu depuis l'attribut data-part du <body> dans le html correspondant.
+// ─── Détection de la partie & initialisation du DOM ──────────────────────────
+// Le numéro de partie est lu depuis le paramètre URL (?part=1/2/3).
 
-const partNumber = parseInt(document.body.dataset.part) || 1;
+const partNumber = parseInt(new URLSearchParams(location.search).get("part")) || 1;
 const part       = PARTS[partNumber];
-const exercises  = part.exercises;
+
+if (!part) {
+    // Partie inconnue : redirection immédiate vers l'accueil
+    console.error(`Partie "${partNumber}" introuvable.`);
+    location.href = "index.html";
+}
+
+// Propagation du numéro de partie sur le <body> (utilisé par le reste du script)
+document.body.dataset.part = partNumber;
+
+// Mise à jour du <title> de l'onglet
+document.title = part.title;
+
+// Titre affiché dans le header
+document.getElementById("partTitle").textContent = part.title;
+
+// Génération des pastilles d'exercices (ex1, ex2, …)
+const exerciseList = document.getElementById("exerciseList");
+part.exercises.forEach((ex, i) => {
+    const span = document.createElement("span");
+    span.id          = `ex${i + 1}`;
+    span.textContent = ex.name;
+    exerciseList.appendChild(span);
+});
+
+const exercises = part.exercises;
 
 // ─── État de la session ───────────────────────────────────────────────────────
 
