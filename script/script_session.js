@@ -17,7 +17,7 @@ const PARTS = {
             { name: "TY", text: "tttt yyyy ttyy tyty t y tyghfj jjyttyg tffgjyy ty ytttfh thghy tytytfgj thjyghf tyjtytg" },
             { name: "SL", text: "ssss llll ssll slsl s l sllsthfj jjtylls lsslsjgh slfjhstl ytyghls tytlsssll gghhlsytls" }
         ],
-        nextPage: "code/part2.html",
+        nextPage: "code/session.html",
         mode: "letters"
     },
     2: {
@@ -28,7 +28,7 @@ const PARTS = {
             { name: "7-8 lettres", words: ["without","another","between","example","country","problem","support","morning"] },
             { name: "9 lettres",   words: ["important","language","experience","business","community","everything","education"] }
         ],
-        nextPage: "code/part3.html",
+        nextPage: "code/session.html",
         mode: "words"
     },
     3: {
