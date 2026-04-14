@@ -29,6 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
     sessionStorage.setItem("username", username);
     localStorage.setItem("exerciseOrder", "0");
 
-    window.location.href = "code/part1.html";
+    window.location.href = "code/session.html";
   });
 });
