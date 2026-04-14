@@ -1,29 +1,33 @@
 <!doctype html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<title>Dactylographie sur K3</title>
-		<base href="/K3_typinglearn/">
-		<link rel="stylesheet" href="style/style.css">
-	</head>
-	<body>
+<head>
+    <meta charset="UTF-8">
+    <title>Dactylographie sur K3</title>
+    <base href="/K3_typinglearn/">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
 
+    <!-- ── Page d'accueil ────────────────────────────────────────────────────── -->
+    <div class="container">
+        <div class="left">
 
-		<div class="container">
-			<div class="left">
-				<h1>Dactylographie sur K3</h1>
-				<p>Entrainez votre précision et votre vitesse sur le clavier cubique</p>
+            <h1>Dactylographie sur K3</h1>
+            <p>Entraînez votre précision et votre vitesse sur le clavier cubique</p>
 
-				<!--Nom utilisateur-->
-				<input type="text" id="username" placeholder="Nom d'utilisateur">
+            <!-- Champ nom d'utilisateur -->
+            <input
+                type="text"
+                id="username"
+                placeholder="Nom d'utilisateur"
+                autocomplete="off"
+            >
 
-				<button id="startBtn">Commencer la session</button>
+            <button id="startBtn">Commencer la session</button>
 
-			</div>
+        </div>
+    </div>
 
-			
-		</div>
-
-		<script src="script/script.js"></script>
-	</body>
+    <script src="script/script.js"></script>
+</body>
 </html>
