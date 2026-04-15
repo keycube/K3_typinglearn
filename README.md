@@ -31,13 +31,9 @@ Chaque session est divisée en trois parties ayant une difficulté progressive :
 - Vue dépliée : les deux faces cachées sont affichées à côté du cube comme un schéma déplié.
 
 7. Une fois les trois parties complétées (lettres, mots, phrases), la page de résultats s'affiche avec :
-
 - WPM moyen (mots par minute)
-
 - Taux d'erreur calculé avec la distance de Levenshtein
-
 - Temps de réaction moyen entre frappes
-
 - Le détail par exercice
 
 9. Cliquer sur Exporter les résultats pour télécharger un fichier CSV
@@ -46,9 +42,9 @@ Chaque session est divisée en trois parties ayant une difficulté progressive :
 
 Les fichiers sont structurés comme suit:
 
-index.html: le code html de la page d'accueil.
+- `index.html`: le code html de la page d'accueil.
 
-code/session.htlm et resultat.html : le code html de la session et de la page des résultats.
+- `code/session.html` et `resultat.html` : le code html de la session et de la page des résultats.
 
 script/index.js, resultat.js et script_session.js: le code js de la page d'accueil, de la session et des résultats.
 
