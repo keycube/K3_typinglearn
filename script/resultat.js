@@ -90,7 +90,12 @@ function loadResults() {
 
     // ── Mise à jour du header ─────────────────────────────────────────────────
 
-    document.getElementById("username").textContent = username;
+    // Nom affiché en gras dans le header
+    const usernameEl = document.getElementById("username");
+    usernameEl.innerHTML = "";
+    const strong = document.createElement("strong");
+    strong.textContent = username;
+    usernameEl.appendChild(strong);
     document.getElementById("time").textContent     = formatTime(totalTime);
     document.getElementById("date").textContent     = date.toLocaleDateString("fr-FR", {
         year: "numeric", month: "long", day: "numeric"
@@ -141,9 +146,10 @@ function loadResults() {
     document.getElementById("btnExport").addEventListener("click", () => {
         const btn = document.getElementById("btnExport");
 
-        const headers = ["Partie", "Exercice", "WPM", "Taux erreur (%)", "Temps réaction (ms)"];
+        const headers = ["Utilisateur", "Partie", "Exercice", "WPM", "Taux erreur (%)", "Temps réaction (ms)"];
 
         const rows = stats.map(e => [
+            username,
             `Partie ${e.part}`,
             e.exerciseName,
             e.wpm,
@@ -153,7 +159,7 @@ function loadResults() {
 
         // Ligne de résumé global en bas du fichier
         rows.push([]);
-        rows.push(["RÉSUMÉ", "", avgWpm, avgError, avgReact]);
+        rows.push([username, "RÉSUMÉ", "", avgWpm, avgError, avgReact]);
 
         // Encodage CSV avec BOM UTF-8 pour compatibilité Excel
         const csvContent = [headers, ...rows]
