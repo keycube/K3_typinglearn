@@ -36,29 +36,29 @@ Chaque session est divisée en trois parties ayant une difficulté progressive :
 - Temps de réaction moyen entre frappes
 - Le détail par exercice
 
-9. Cliquer sur Exporter les résultats pour télécharger un fichier CSV
+9. Cliquer sur Exporter les résultats pour télécharger un fichier CSV.
 
 #### Programmeur
 
 Les fichiers sont structurés comme suit:
 
-- `index.html`: le code html de la page d'accueil.
+- `index.html`: le code HTML de la page d'accueil.
 
-- `code/session.html` et `resultat.html` : le code html de la session et de la page des résultats.
+- `code/session.html` et `resultat.html` : le code HTML de la session et de la page des résultats.
 
-script/index.js, resultat.js et script_session.js: le code js de la page d'accueil, de la session et des résultats.
+- `script/index.js`, `resultat.js` et `session.js`: le code JavaScript de la page d'accueil, de la session et des résultats.
 
-style/style.css: le code css de l'ensemble de l'application web.
+- `style/style.css`: le code CSS de l'ensemble de l'application web.
 
-L'utilisateur  entre son nom d'utilisateur. Il es stocké dans localStorage (voir index.js). La session commence.
+L'utilisateur entre son nom d'utilisateur. Il es stocké dans localStorage (voir `index.js`). La session commence.
 
-**Détection de la partie** : Le numéro de partie est lu depuis le paramètre URL (?part=1/2/3). Le script script_session.js lit cet attribut et charge les données correspondantes depuis l'objet PARTS.
+**Détection de la partie** : Le numéro de partie est lu depuis le paramètre URL (`?part=1/2/3`). Le script `session.js` lit cet attribut et charge les données correspondantes depuis l'objet `PARTS`.
 
-Les exercices sont spécifiques à chaque parties. On peut modifier le contenu de chaque exercices depuis PARTS dans script_session.js. On peut passer les exercices sans les faire en appuyant sur &.
+Les exercices sont spécifiques à chaque parties. On peut modifier le contenu de chaque exercices depuis `PARTS` dans `session.js`. On peut passer les exercices sans les faire en appuyant sur &.
 
-**Cube** : Chaque partie a un cube cubique en 3D réalisé avec Three.js en vue isométrique orthographique. Les textures de chaque face sont générées dynamiquement. La touche cible est mise en évidence en jaune à chaque frappe. Deux modes de visualisation sont disponibles et modifiable dans script_session.js.
+**Cube** : Chaque partie a un clavier cubique en 3D réalisé avec Three.js en vue isométrique orthographique. Les textures de chaque face sont générées dynamiquement. La touche cible est mise en évidence en jaune à chaque frappe. Deux modes de visualisation sont disponibles et modifiable dans `session.js`.
 
-**Stockage des données** : les métriques sont accumulées dans sessionStorage tout au long de la session (pas de base de données externe). À la fin de la session, resultat.js lit ces données pour afficher les résultats. On peut ensuite exporter ces informations de session dans un dcoument k3_session_nom_utilisateur_annee_mois_jour.csv. Le calcul des métriques est disponible et modifiable dans srcipt_session.js.
+**Stockage des données** : les métriques sont accumulées dans sessionStorage tout au long de la session (pas de base de données externe). À la fin de la session, `resultat.js` lit ces données pour afficher les résultats. On peut ensuite exporter ces informations de session dans un dcoument k3_session_nom_utilisateur_annee_mois_jour.csv. Le calcul des métriques est disponible et modifiable dans `session.js`.
 
 
 **Déploiement** : l'application est un site statique, déployable sur GitHub Pages sans configuration serveur. La balise <base href="/K3\_typinglearn/"> dans chaque HTML doit correspondre au nom du dépôt.
