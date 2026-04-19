@@ -26,15 +26,15 @@ Chaque session est divisée en trois parties ayant une difficulté progressive :
 4. Un cube 3D représente le clavier K3 et met en évidence la touche à frapper. 
 5. Le bouton Vue dépliée / Vue transparente permet à l'utilisateur de choisir entre les deux modes de visualisation du cube :
 
-- Vue transparente : le cube est semi-transparent, toutes les faces sont visibles simultanément avec différents niveaux de transparence.
+-  Vue transparente : le cube est semi-transparent, toutes les faces sont visibles simultanément avec différents niveaux de transparence.
 
-- Vue dépliée : les deux faces cachées sont affichées à côté du cube comme un schéma déplié.
+-  Vue dépliée : les deux faces cachées sont affichées à côté du cube comme un schéma déplié.
 
 7. Une fois les trois parties complétées (lettres, mots, phrases), la page de résultats s'affiche avec :
-- WPM moyen (mots par minute)
-- Taux d'erreur calculé avec la distance de Levenshtein
-- Temps de réaction moyen entre frappes
-- Le détail par exercice
+-  WPM moyen (mots par minute)
+-  Taux d'erreur calculé avec la distance de Levenshtein
+-  Temps de réaction moyen entre frappes
+-  Le détail par exercice
 
 9. Cliquer sur Exporter les résultats pour télécharger un fichier CSV.
 
