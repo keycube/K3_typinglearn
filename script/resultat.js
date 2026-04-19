@@ -13,7 +13,7 @@ const PART_CLASS = { 1: "p1", 2: "p2", 3: "p3" };
 
 // Couleurs des graphiques (doivent correspondre aux variables CSS --accent*)
 const CHART_COLORS = {
-    wpm:   "rgba(124, 106, 247, 1)",
+    wpm: "rgba(124, 106, 247, 1)",
     error: "rgba(247, 106, 138, 1)",
     react: "rgba(59,  130, 246, 1)"
 };
@@ -50,11 +50,11 @@ function makeChart(canvasId, labels, data, color) {
             labels,
             datasets: [{
                 data,
-                borderColor:     color,
+                borderColor: color,
                 backgroundColor: color.replace("1)", "0.1)"),
-                tension:         0.3,
-                fill:            true,
-                pointRadius:     4
+                tension: 0.3,
+                fill: true,
+                pointRadius: 4
             }]
         },
         options: {
@@ -79,12 +79,12 @@ function loadResults() {
     // Données de contexte
     const totalTime = parseInt(sessionStorage.getItem("sessionTotalTime") || "0");
     // Priorité : sessionStorage (plus fiable en fin de session) puis localStorage
-    const username  = sessionStorage.getItem("username") || localStorage.getItem("username") || "Invité";
-    const date      = new Date();
+    const username = sessionStorage.getItem("username") || localStorage.getItem("username") || "Invité";
+    const date = new Date();
 
     // ── Calcul des moyennes globales ──────────────────────────────────────────
 
-    const avgWpm   = avg(stats.map(e => e.wpm));
+    const avgWpm = avg(stats.map(e => e.wpm));
     const avgError = avg(stats.map(e => e.errorRate));
     const avgReact = avg(stats.map(e => e.avgReactionTime));
 
@@ -96,27 +96,27 @@ function loadResults() {
     const strong = document.createElement("strong");
     strong.textContent = username;
     usernameEl.appendChild(strong);
-    document.getElementById("time").textContent     = formatTime(totalTime);
-    document.getElementById("date").textContent     = date.toLocaleDateString("fr-FR", {
+    document.getElementById("time").textContent = formatTime(totalTime);
+    document.getElementById("date").textContent = date.toLocaleDateString("fr-FR", {
         year: "numeric", month: "long", day: "numeric"
     });
 
     // ── Mise à jour des KPI ───────────────────────────────────────────────────
 
-    document.getElementById("avgWpm").textContent   = avgWpm;
+    document.getElementById("avgWpm").textContent = avgWpm;
     document.getElementById("avgError").textContent = avgError;
     document.getElementById("avgReact").textContent = avgReact;
 
     // ── Tableau des exercices ─────────────────────────────────────────────────
 
-    const grid     = document.getElementById("exercisesGrid");
+    const grid = document.getElementById("exercisesGrid");
     const template = document.getElementById("exerciseTemplate");
 
     stats.forEach(e => {
         const clone = template.content.cloneNode(true);
 
         clone.querySelector(".exercise-part").textContent = PART_LABEL[e.part];
-        clone.querySelector(".name").textContent          = e.exerciseName;
+        clone.querySelector(".name").textContent = e.exerciseName;
 
         const badge = clone.querySelector(".part-badge");
         badge.textContent = "P" + e.part;
@@ -137,9 +137,9 @@ function loadResults() {
 
     const labels = stats.map(e => e.exerciseName);
 
-    makeChart("chartWpm",   labels, stats.map(e => e.wpm),             CHART_COLORS.wpm);
-    makeChart("chartError", labels, stats.map(e => e.errorRate),        CHART_COLORS.error);
-    makeChart("chartReact", labels, stats.map(e => e.avgReactionTime),  CHART_COLORS.react);
+    makeChart("chartWpm",   labels, stats.map(e => e.wpm), CHART_COLORS.wpm);
+    makeChart("chartError", labels, stats.map(e => e.errorRate), CHART_COLORS.error);
+    makeChart("chartReact", labels, stats.map(e => e.avgReactionTime), CHART_COLORS.react);
 
     // ── Export CSV ────────────────────────────────────────────────────────────
 
@@ -167,9 +167,9 @@ function loadResults() {
             .join("\n");
 
         const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement("a");
-        a.href     = url;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
         a.download = `k3_session_${username}_${date.toISOString().slice(0, 10)}.csv`;
         a.click();
         URL.revokeObjectURL(url);

@@ -38,9 +38,9 @@ const PARTS = {
     3: {
         title: "Partie 3 - Phrases",
         exercises: [
-            { name: "Courtes",        sentences: ["They play"] },
+            { name: "Courtes", sentences: ["They play"] },
             { name: "Intermédiaires", sentences: ["I need to finish this today"] },
-            { name: "Longues",        sentences: ["She told me that everything would be fine if we stayed focused"] }
+            { name: "Longues", sentences: ["She told me that everything would be fine if we stayed focused"] }
         ],
         nextPage: "code/resultat.html",
         mode: "sentences"
@@ -50,21 +50,21 @@ const PARTS = {
 // ─── Détection de la partie & initialisation du DOM ──────────────────────────
 
 const partNumber = parseInt(new URLSearchParams(location.search).get("part")) || 1;
-const part       = PARTS[partNumber];
+const part = PARTS[partNumber];
 
 if (!part) {
     console.error(`Partie "${partNumber}" introuvable.`);
     location.href = "index.html";
 }
 
-document.body.dataset.part                          = partNumber;
-document.title                                      = part.title;
-document.getElementById("partTitle").textContent    = part.title;
+document.body.dataset.part = partNumber;
+document.title = part.title;
+document.getElementById("partTitle").textContent = part.title;
 
 const exerciseList = document.getElementById("exerciseList");
 part.exercises.forEach((ex, i) => {
-    const span       = document.createElement("span");
-    span.id          = `ex${i + 1}`;
+    const span = document.createElement("span");
+    span.id = `ex${i + 1}`;
     span.textContent = ex.name;
     exerciseList.appendChild(span);
 });
@@ -74,18 +74,18 @@ const exercises = part.exercises;
 // ─── État de la session ───────────────────────────────────────────────────────
 
 let currentExerciseIndex = 0;
-let currentSubIndex      = 0;
-let currentIndex         = 0;
-let spans                = [];
+let currentSubIndex = 0;
+let currentIndex = 0;
+let spans = [];
 
 let exerciseStartTime = null;
-let allKeyTimestamps  = [];
-let allTypedChars     = [];
-let allExpectedChars  = [];
+let allKeyTimestamps = [];
+let allTypedChars = [];
+let allExpectedChars = [];
 
 // ─── Affichage du nom d'utilisateur ───────────────────────────────────────────
 
-const username   = localStorage.getItem("username");
+const username = localStorage.getItem("username");
 const usernameEl = document.getElementById("usernameDisplay");
 if (usernameEl) usernameEl.textContent = username || "Invité";
 
@@ -112,8 +112,8 @@ function updateTimerDisplay() {
 
 function updateGlobalProgress() {
     const completed = parseInt(localStorage.getItem("completedExercises")) || 0;
-    const percent   = Math.floor((completed / TOTAL_EXERCISES_SESSION) * 100);
-    document.getElementById("progressBar").style.width    = percent + "%";
+    const percent = Math.floor((completed / TOTAL_EXERCISES_SESSION) * 100);
+    document.getElementById("progressBar").style.width = percent + "%";
     document.getElementById("progressPercent").textContent = percent + "%";
 }
 
@@ -126,13 +126,13 @@ function updateCursor() {
     const containerRect = document.getElementById("textDisplay").getBoundingClientRect();
 
     if (currentIndex >= spans.length) {
-        const lastRect    = spans[spans.length - 1].getBoundingClientRect();
+        const lastRect = spans[spans.length - 1].getBoundingClientRect();
         cursor.style.left = (lastRect.right - containerRect.left) + "px";
-        cursor.style.top  = (lastRect.top   - containerRect.top)  + "px";
+        cursor.style.top = (lastRect.top   - containerRect.top)  + "px";
     } else {
-        const rect        = spans[currentIndex].getBoundingClientRect();
+        const rect = spans[currentIndex].getBoundingClientRect();
         cursor.style.left = (rect.left - containerRect.left) + "px";
-        cursor.style.top  = (rect.top  - containerRect.top)  + "px";
+        cursor.style.top = (rect.top  - containerRect.top)  + "px";
     }
 }
 
@@ -145,12 +145,12 @@ function loadContent() {
 
     const ex = exercises[currentExerciseIndex];
     let text = "";
-    if      (part.mode === "letters")   text = ex.text;
-    else if (part.mode === "words")     text = ex.words[currentSubIndex];
+    if (part.mode === "letters")  text = ex.text;
+    else if (part.mode === "words") text = ex.words[currentSubIndex];
     else if (part.mode === "sentences") text = ex.sentences[currentSubIndex];
 
     text.split("").forEach(char => {
-        const span       = document.createElement("span");
+        const span = document.createElement("span");
         span.textContent = char;
         textDisplay.appendChild(span);
     });
@@ -187,23 +187,23 @@ function levenshtein(a, b) {
 // ─── Calcul des métriques ─────────────────────────────────────────────────────
 
 function computeMetrics() {
-    const typedText      = allTypedChars.join("");
-    const expectedText   = allExpectedChars.join("");
+    const typedText = allTypedChars.join("");
+    const expectedText = allExpectedChars.join("");
     const elapsedMinutes = exerciseStartTime
         ? (performance.now() - exerciseStartTime) / 60000
         : 1;
 
-    const wpm       = elapsedMinutes > 0
+    const wpm = elapsedMinutes > 0
         ? Math.round((allKeyTimestamps.length / 5) / elapsedMinutes)
         : 0;
-    const dist      = levenshtein(typedText, expectedText);
+    const dist = levenshtein(typedText, expectedText);
     const errorRate = expectedText.length > 0
         ? Math.round((dist / expectedText.length) * 100)
         : 0;
 
     let avgReactionTime = 0;
     if (allKeyTimestamps.length > 1) {
-        const deltas    = allKeyTimestamps.slice(1).map((t, i) => t - allKeyTimestamps[i]);
+        const deltas = allKeyTimestamps.slice(1).map((t, i) => t - allKeyTimestamps[i]);
         avgReactionTime = Math.round(deltas.reduce((a, b) => a + b, 0) / deltas.length);
     }
 
@@ -220,7 +220,7 @@ document.addEventListener("keydown", (e) => {
 
     if (exerciseStartTime === null) exerciseStartTime = performance.now();
 
-    const now      = performance.now();
+    const now = performance.now();
     const expected = spans[currentIndex].textContent;
 
     allTypedChars.push(e.key);
@@ -267,16 +267,16 @@ async function finishExercise() {
     if (exEl) exEl.classList.add("done");
 
     const metrics = computeMetrics();
-    const order   = parseInt(localStorage.getItem("exerciseOrder") || "0");
+    const order = parseInt(localStorage.getItem("exerciseOrder") || "0");
     localStorage.setItem("exerciseOrder", order + 1);
 
     const stats = JSON.parse(sessionStorage.getItem("sessionStats") || "[]");
     stats.push({
-        part:            partNumber,
+        part: partNumber,
         order,
-        exerciseName:    exercises[currentExerciseIndex].name,
-        wpm:             metrics.wpm,
-        errorRate:       metrics.errorRate,
+        exerciseName: exercises[currentExerciseIndex].name,
+        wpm: metrics.wpm,
+        errorRate: metrics.errorRate,
         avgReactionTime: metrics.avgReactionTime
     });
     sessionStorage.setItem("sessionStats", JSON.stringify(stats));
@@ -286,10 +286,10 @@ async function finishExercise() {
     updateGlobalProgress();
 
     exerciseStartTime = null;
-    allKeyTimestamps  = [];
-    allTypedChars     = [];
-    allExpectedChars  = [];
-    currentSubIndex   = 0;
+    allKeyTimestamps = [];
+    allTypedChars = [];
+    allExpectedChars = [];
+    currentSubIndex = 0;
     currentExerciseIndex++;
 
     if (currentExerciseIndex < exercises.length) {
@@ -318,20 +318,20 @@ async function endSession() {
 // ─── Disposition des touches sur les faces ────────────────────────────────────
 // Chaque face est un tableau 4×4 de labels (chaîne vide = touche absente).
 
-const faceLeft   = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
-const faceRight  = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
-const faceBack   = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
-const faceFront  = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
-const faceTop    = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
+const faceLeft = [["alt","OS","ctrl","shift"],[",<",".>","/?",""],[":;","'","Tab","`~"],["{[","]}","|",""]];
+const faceRight = [["","V","F","R"],["","C","D","E"],["","X","S","W"],["","Z","A","Q"]];
+const faceBack = [["U","J","B",""],["I","K","N",""],["O","L","M",""],["P","","",""]];
+const faceFront = [["shift","ctrl","OS","alt"],["7&","8*","9(","0)"],["4$","5%","6^","-_"],["1!","2@","3#","+="]];
+const faceTop = [["Sp","G","T","CpLk"],["Sp","Left","Up","Y"],["Sp","Dwn","Right","H"],["Entr","Entr","Bks","Bks"]];
 const faceBottom = [["","","",""],["","","",""],["","","",""],["","","",""]];
 
 // ─── État visuel du cube ──────────────────────────────────────────────────────
 
 let currentTargetKey = null; // Lettre cible mise en évidence sur le cube
-let cubeMaterials    = [];   // Matériaux des 6 faces du cube
-let cubeMode         = localStorage.getItem("cubeMode") || "transparent"; // "transparent" ou "unfolded"
-let rightFaceMesh    = null; // Plan déplié face droite (mode unfolded)
-let backFaceMesh     = null; // Plan déplié face arrière (mode unfolded)
+let cubeMaterials = [];   // Matériaux des 6 faces du cube
+let cubeMode = localStorage.getItem("cubeMode") || "transparent"; // "transparent" ou "unfolded"
+let rightFaceMesh = null; // Plan déplié face droite (mode unfolded)
+let backFaceMesh = null; // Plan déplié face arrière (mode unfolded)
 
 // ─── Mise à jour de la touche cible ──────────────────────────────────────────
 
@@ -347,10 +347,10 @@ function updateCurrentTargetKey() {
 // mirror=true retourne horizontalement la texture (faces vues de derrière).
 
 function createKeyboardFace(layout, mirror = false) {
-    const SIZE   = 512;
+    const SIZE = 512;
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = SIZE;
-    const ctx    = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
     ctx.clearRect(0, 0, SIZE, SIZE);
 
@@ -362,23 +362,23 @@ function createKeyboardFace(layout, mirror = false) {
     ctx.fillStyle = "rgba(150,150,150,0.15)";
     ctx.fillRect(0, 0, SIZE, SIZE);
 
-    const rows      = layout.length;
-    const cols      = layout[0].length;
-    const padding   = 40;
-    const gap       = 15;
-    const keyWidth  = (SIZE - padding * 2 - gap * (cols - 1)) / cols;
+    const rows = layout.length;
+    const cols = layout[0].length;
+    const padding = 40;
+    const gap = 15;
+    const keyWidth = (SIZE - padding * 2 - gap * (cols - 1)) / cols;
     const keyHeight = (SIZE - padding * 2 - gap * (rows - 1)) / rows;
 
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-            const letter   = layout[r][c];
-            const x        = padding + c * (keyWidth + gap);
-            const y        = padding + r * (keyHeight + gap);
+            const letter = layout[r][c];
+            const x = padding + c * (keyWidth + gap);
+            const y = padding + r * (keyHeight + gap);
             const isTarget = letter && letter.toUpperCase() === currentTargetKey;
 
             // Ombre portée
-            ctx.shadowColor   = "rgba(0,0,0,0.45)";
-            ctx.shadowBlur    = 8;
+            ctx.shadowColor = "rgba(0,0,0,0.45)";
+            ctx.shadowBlur = 8;
             ctx.shadowOffsetX = 4;
             ctx.shadowOffsetY = 5;
 
@@ -392,7 +392,7 @@ function createKeyboardFace(layout, mirror = false) {
 
             // Reflet haut-gauche
             ctx.strokeStyle = isTarget ? "#ffe066" : "#ffffff";
-            ctx.lineWidth   = 3;
+            ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(x + 6, y + keyHeight);
             ctx.lineTo(x + 6, y + 6);
@@ -401,7 +401,7 @@ function createKeyboardFace(layout, mirror = false) {
 
             // Ombre bas-droite
             ctx.strokeStyle = isTarget ? "#c8960a" : "#aaaaaa";
-            ctx.lineWidth   = 3;
+            ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(x + keyWidth - 2, y + 6);
             ctx.lineTo(x + keyWidth - 2, y + keyHeight - 2);
@@ -409,9 +409,9 @@ function createKeyboardFace(layout, mirror = false) {
             ctx.stroke();
 
             // Label
-            ctx.fillStyle    = isTarget ? "#333" : "#222";
-            ctx.font         = `bold ${isTarget ? 34 : 30}px Arial`;
-            ctx.textAlign    = "center";
+            ctx.fillStyle = isTarget ? "#333" : "#222";
+            ctx.font = `bold ${isTarget ? 34 : 30}px Arial`;
+            ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(letter, x + keyWidth / 2, y + keyHeight / 2);
         }
@@ -501,7 +501,7 @@ function initCube() {
     if (!container) return;
 
     // Scène, caméra orthographique et renderer transparent
-    const scene  = new THREE.Scene();
+    const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
     camera.position.set(-6, 6, 6);
     camera.lookAt(0, 0, 0);
@@ -517,9 +517,9 @@ function initCube() {
         const d = 4;
         const aspect = w / h;
         renderer.setSize(w, h);
-        camera.left   = -d * aspect;
-        camera.right  =  d * aspect;
-        camera.top    =  d;
+        camera.left = -d * aspect;
+        camera.right =  d * aspect;
+        camera.top =  d;
         camera.bottom = -d;
         camera.updateProjectionMatrix();
     }
@@ -534,7 +534,7 @@ function initCube() {
 
     // Cube et arêtes
     const boxGeometry = new THREE.BoxGeometry(4, 4, 4);
-    const cube        = new THREE.Mesh(boxGeometry, []);
+    const cube = new THREE.Mesh(boxGeometry, []);
     scene.add(cube);
     scene.add(new THREE.LineSegments(
         new THREE.EdgesGeometry(boxGeometry),

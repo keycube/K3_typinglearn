@@ -12,7 +12,7 @@ window.addEventListener("pageshow", clearSession);
 // ─── Initialisation du formulaire ─────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", () => {
-    const startBtn      = document.getElementById("startBtn");
+    const startBtn = document.getElementById("startBtn");
     const usernameInput = document.getElementById("username");
 
     if (!startBtn || !usernameInput) return;
@@ -32,8 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Persistance du nom : localStorage pour les pages de session,
         // sessionStorage pour la page de résultats (survit aux redirections).
-        localStorage.setItem("username",      username);
-        sessionStorage.setItem("username",    username);
+        localStorage.setItem("username", username);
+        sessionStorage.setItem("username", username);
 
         // Initialisation du compteur d'ordre des exercices
         localStorage.setItem("exerciseOrder", "0");
