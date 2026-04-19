@@ -598,7 +598,7 @@ function initCube() {
                 new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide })
             );
             backFaceMesh.position.set(7, -2.5, 1);
-            backFaceMesh.rotation.z = 0.12;
+            backFaceMesh.rotation.z = 0.08;
             scene.add(backFaceMesh);
 
             rightFaceMesh = new THREE.Mesh(
