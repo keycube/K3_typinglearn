@@ -38,6 +38,8 @@ body {
     color: var(--text);
     height: 100vh;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -103,26 +105,14 @@ button:hover {
 
 /* ── 4. PAGE EXERCICE ────────────────────────── */
 
-
-body {
-    overflow: hidden;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-#cube-container {
-    flex: 1;          /* prend l'espace restant entre le header et .main */
-    min-height: 0;    /* empêche le débordement — clé du fix */
-    overflow: hidden;
-}
-
+/* Zone principale de frappe */
 .main {
     flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
     padding-bottom: 120px;
 }
-
-/* Barre supérieure */
 .header {
     display: flex;
     justify-content: space-between;
@@ -190,15 +180,6 @@ body {
     font-weight: bold;
 }
 
-/* Zone principale de frappe */
-.main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding-bottom: 120px;
-}
-
 /* Affichage du texte à saisir */
 .text-display {
     position: relative;
@@ -231,8 +212,9 @@ body {
 
 /* Conteneur du cube 3D */
 #cube-container {
-    width: 100%;
-    height: 350px;
+    flex: 1;
+    min-height: 0;    /* clé du fix — sans ça, flex ignore la contrainte de hauteur */
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
