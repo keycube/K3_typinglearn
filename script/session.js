@@ -479,7 +479,7 @@ function applyMode(scene, cube) {
         backFaceMesh = new THREE.Mesh(plane,
             new THREE.MeshStandardMaterial({ map: createKeyboardFace(faceBack), side: THREE.DoubleSide })
         );
-        backFaceMesh.position.set(9, -3, 0);
+        backFaceMesh.position.set(8, -3, 0);
         backFaceMesh.rotation.y = -0.18;
         scene.add(backFaceMesh);
 
