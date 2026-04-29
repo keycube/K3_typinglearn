@@ -315,3 +315,12 @@ async function endSession() {
 // Le module cube.js lit ces valeurs via window pour connaître la touche cible.
 
 window._session = { get spans() { return spans; }, get currentIndex() { return currentIndex; } };
+
+// ─── Point d'entrée ───────────────────────────────────────────────────────────
+// Petit délai pour laisser cube.js s'initialiser et exposer
+// window.updateCurrentTargetKey avant le premier appel de loadContent().
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateGlobalProgress();
+    setTimeout(loadContent, 100);
+});
