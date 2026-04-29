@@ -2,17 +2,18 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Session</title><!-- Mis à jour dynamiquement par script_session.js -->
+    <title>Session</title><!-- Mis à jour dynamiquement par session.js -->
     <base href="/K3_typinglearn/">
     <link rel="stylesheet" href="style/style.css">
 </head>
+
 
 <body>
 
     <!-- ── En-tête ──────────────────────────────────────── -->
     <div class="header">
 
-        <!-- Titre de partie + pastilles d'exercices -->
+        <!-- Titre de partie + pastilles d'exercices (injectés par JS) -->
         <div class="section-exercice">
             <div class="title" id="partTitle"></div>
             <div class="exercises" id="exerciseList"></div>
@@ -45,8 +46,10 @@
         <div class="text-display" id="textDisplay"></div>
     </div>
 
-    <!-- ── Script principal ──────────────────────────────── -->
+    <!-- session en premier : initialise le DOM et expose window._session -->
     <script type="module" src="script/session.js"></script>
+    <!-- cube en second : lit window._session et expose window.updateCurrentTargetKey -->
+    <script type="module" src="script/cube.js"></script>
 
 </body>
 </html>
